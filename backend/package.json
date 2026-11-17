@@ -1,0 +1,33 @@
+{
+  "name": "food-wagon-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "REST API for the Food Wagon demo: restaurants, menus, search, cart pricing, orders, accounts, reviews, favourites, promo codes and admin (Express + MongoDB)",
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "seed": "node src/seed.js",
+    "test": "node --test --test-concurrency=1 test/*.test.js",
+    "dev:memory": "node scripts/dev-memory.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.5",
+    "multer": "^2.5.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "mongodb-memory-server-core": "^10.1.4",
+    "supertest": "^7.0.0"
+  }
+}

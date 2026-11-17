@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://codelady-ship.github.io/Food-Wagon-delivery-figma/sitemap.xml

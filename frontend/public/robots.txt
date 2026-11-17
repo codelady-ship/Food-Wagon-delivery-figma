@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /Food-Wagon-delivery-figma/admin.html
+Disallow: /Food-Wagon-delivery-figma/checkout.html
+Disallow: /Food-Wagon-delivery-figma/cart.html
+
+Sitemap: https://codelady-ship.github.io/Food-Wagon-delivery-figma/sitemap.xml

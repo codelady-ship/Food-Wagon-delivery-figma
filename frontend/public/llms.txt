@@ -1,0 +1,34 @@
+# Food Wagon
+
+> Food Wagon is a demo food delivery web app for Baku, Azerbaijan, built as a full-stack portfolio project (React + TypeScript front end, Node.js + Express + MongoDB API). It lists 8 sample restaurants. No real food is delivered and no payment is taken.
+
+Key facts:
+- Service area: Baku (opening hours are Baku time, UTC+4)
+- Delivery time: 15-40 minutes depending on the restaurant
+- Delivery fee: $1-$3, free from a $30 subtotal; pickup is free
+- Payment: demo card (nothing charged) or cash on delivery
+- Order tracking: every order gets a reference like FW-1A2B3C; statuses are received, preparing, on the way / ready for pickup, delivered
+- Promo codes: WELCOME10 (10% off over $15), FREESHIP (free delivery over $10), BIG5 ($5 off over $40)
+- Accounts: optional; add order history, favourite restaurants and reviews
+
+## Pages
+
+- [Home](https://codelady-ship.github.io/Food-Wagon-delivery-figma/): what Food Wagon is, how it works, popular dishes, FAQ
+- [Restaurants](https://codelady-ship.github.io/Food-Wagon-delivery-figma/restaurants.html): search and filter by cuisine, price, rating, delivery time, open now
+- [Track an order](https://codelady-ship.github.io/Food-Wagon-delivery-figma/order.html)
+- [Contact and partners](https://codelady-ship.github.io/Food-Wagon-delivery-figma/contact.html)
+
+## Restaurants
+
+- [Golden Fork Bistro](https://codelady-ship.github.io/Food-Wagon-delivery-figma/restaurant.html?slug=golden-fork-bistro): Neighbourhood Italian bistro with wood-fired pizza, fresh pasta and house-made desserts. Cuisines: Italian, Desserts. Rating 4.6/5, about 30 min, delivery $2.50, open 10:00-23:00. 28 Nizami St, Baku.
+- [Urban Loft Kitchen](https://codelady-ship.github.io/Food-Wagon-delivery-figma/restaurant.html?slug=urban-loft-kitchen): Modern loft kitchen mixing Asian street food, grilled chicken and brunch classics. Cuisines: Asian, Chicken, Desserts. Rating 4.4/5, about 35 min, delivery $2.50, open 09:00-23:00. 5 Rashid Behbudov St, Baku.
+- [Market Hall Grill](https://codelady-ship.github.io/Food-Wagon-delivery-figma/restaurant.html?slug=market-hall-grill): Busy food-hall grill for smash burgers, crispy chicken and hearty bowls. Cuisines: Burgers, Chicken, Healthy, Grill. Rating 4.2/5, about 20 min, delivery $1.50, open 11:00-22:00. 12 Fizuli St, Baku.
+- [Sea Breeze Terrace](https://codelady-ship.github.io/Food-Wagon-delivery-figma/restaurant.html?slug=sea-breeze-terrace): Seaside terrace serving sushi, fresh salads and cold-pressed juices. Cuisines: Asian, Healthy, Drinks. Rating 4.7/5, about 40 min, delivery $3.00, open 10:00-00:00. Seaside Boulevard 3, Baku.
+- [Tokyo Noodle Bar](https://codelady-ship.github.io/Food-Wagon-delivery-figma/restaurant.html?slug=tokyo-noodle-bar): Small ramen counter with slow-cooked broths, sushi rolls and yakitori. Cuisines: Asian, Chicken, Drinks. Rating 4.5/5, about 25 min, delivery $2.00, open 12:00-23:30. 41 Samad Vurgun St, Baku.
+- [Green Bowl Co.](https://codelady-ship.github.io/Food-Wagon-delivery-figma/restaurant.html?slug=green-bowl-co): Salad and grain bowls with fresh juices, open from breakfast. Cuisines: Healthy, Chicken, Drinks. Rating 4.3/5, about 20 min, delivery $1.50, open 08:00-21:00. 9 Uzeyir Hajibeyov St, Baku.
+- [Napoli Slice](https://codelady-ship.github.io/Food-Wagon-delivery-figma/restaurant.html?slug=napoli-slice): Late-night pizza by the slice or whole, with dough proofed for 48 hours. Cuisines: Italian. Rating 4.1/5, about 25 min, delivery $1.50, open 11:00-02:00. 77 Ataturk Ave, Baku.
+- [Sweet Corner Bakery](https://codelady-ship.github.io/Food-Wagon-delivery-figma/restaurant.html?slug=sweet-corner-bakery): Family bakery for pancakes, brownies and fresh juice, baked every morning. Cuisines: Desserts, Drinks. Rating 4.8/5, about 15 min, delivery $1.00, open 08:00-20:00. 2 Khagani St, Baku.
+
+## Optional
+
+- [Source code](https://github.com/codelady-ship/Food-Wagon-delivery-figma): README, API documentation and credits
