@@ -81,7 +81,10 @@ test("restaurant detail, dishes and meta", async () => {
   const popular = await request(app).get("/api/dishes?popular=true");
   assert.ok(popular.body.every((d) => d.popular));
   assert.equal((await request(app).get("/api/dishes/veggie-pizza")).body.price, 12.5);
-  assert.equal((await request(app).get("/api/meta")).body.categories.length, 7);
+  assert.equal((await request(app).get("/api/meta")).body.categories.length, 8);
+  const featured = await request(app).get("/api/dishes?featured=true");
+  assert.equal(featured.body.length, 6);
+  assert.ok(featured.body.every((d) => d.cutout && d.headline.length === 2 && d.ingredients.length && /^#/.test(d.accent) && d.chef));
 });
 
 test("opening hours helper handles midnight", () => {
@@ -181,6 +184,14 @@ test("favourites and reviews", async () => {
   assert.ok(afterR.rating >= before.rating);
   assert.equal(afterR.reviews.filter((r) => r.authorName === "Test User").length, 1);
   assert.equal((await asUser(request(app).post("/api/restaurants/napoli-slice/reviews")).send({ rating: 9 })).status, 400);
+});
+
+test("dish likes", async () => {
+  const before = (await request(app).get("/api/dishes/shrimp-ramen")).body.likes;
+  assert.equal((await request(app).post("/api/dishes/shrimp-ramen/like").send({ action: "like" })).body.likes, before + 1);
+  assert.equal((await request(app).post("/api/dishes/shrimp-ramen/like").send({ action: "unlike" })).body.likes, before);
+  assert.equal((await request(app).post("/api/dishes/shrimp-ramen/like").send({ action: "boost" })).status, 400);
+  assert.equal((await request(app).post("/api/dishes/ghost/like").send({ action: "like" })).status, 404);
 });
 
 test("newsletter and contact", async () => {

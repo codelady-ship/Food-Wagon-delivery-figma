@@ -19,7 +19,7 @@ const imageRef = z
   .trim()
   .min(1, "Add an image")
   .max(300)
-  .refine((s) => /^images\/[a-z0-9-]+\.(webp|jpg|png)$/.test(s) || /^https?:\/\/\S+$/.test(s), "Use images/name.webp or a full image URL");
+  .refine((s) => /^images\/(cutouts\/)?[a-z0-9-]+\.(webp|jpg|png)$/.test(s) || /^https?:\/\/\S+$/.test(s), "Use images/name.webp or a full image URL");
 const email = z.string().trim().toLowerCase().email("Enter a valid email address").max(120);
 const bool = z.union([z.boolean(), z.enum(["true", "false"]).transform((v) => v === "true")]);
 
@@ -27,6 +27,7 @@ const restaurantSchema = z.object({
   slug,
   name: z.string().trim().min(2).max(60),
   description: z.string().trim().max(300).optional(),
+  chef: z.string().trim().max(60).optional(),
   cuisines: z.array(z.enum(CATEGORIES)).min(1, "Pick at least one cuisine").max(7),
   priceLevel: z.coerce.number().int().min(1).max(3),
   rating: z.coerce.number().min(0).max(5).optional(),
@@ -53,6 +54,12 @@ const dishSchema = z.object({
   image: imageRef,
   alt: z.string().trim().max(160).optional(),
   popular: bool.optional(),
+  featured: bool.optional(),
+  cutout: z.union([imageRef, z.literal("")]).optional(),
+  headline: z.array(z.string().trim().max(30)).max(2).optional(),
+  ingredients: z.array(z.string().trim().min(1).max(40)).max(12).optional(),
+  accent: z.string().regex(/^#[0-9a-fA-F]{6}$/, "Use a hex colour like #F17228").optional(),
+  chef: z.string().trim().max(60).optional(),
   available: bool.optional(),
   order: z.coerce.number().int().optional(),
 });
@@ -200,7 +207,15 @@ function createApp() {
 
   api.get("/dishes", async (req, res) => {
     const rows = await Dish.find({ available: true }).sort({ order: 1, name: 1 });
-    res.json(catalog.filterDishes(lean(rows), { ...req.query, popular: req.query.popular === "true" }));
+    res.json(catalog.filterDishes(lean(rows), { ...req.query, popular: req.query.popular === "true", featured: req.query.featured === "true" }));
+  });
+
+  // Likes on the orbit menu: anonymous, rate-limited; the browser remembers what it liked.
+  api.post("/dishes/:slug/like", writeLimiter(60), validate(z.object({ action: z.enum(["like", "unlike"]) })), async (req, res) => {
+    const inc = req.body.action === "like" ? 1 : -1;
+    const dish = await Dish.findOneAndUpdate({ slug: String(req.params.slug), ...(inc < 0 ? { likes: { $gt: 0 } } : {}) }, { $inc: { likes: inc } }, { new: true });
+    const current = dish || oneOr404(await Dish.findOne({ slug: String(req.params.slug) }), "Dish");
+    res.json({ slug: current.slug, likes: current.likes });
   });
 
   api.get("/dishes/:slug", async (req, res) => {

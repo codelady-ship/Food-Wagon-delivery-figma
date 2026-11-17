@@ -8,6 +8,17 @@ const R = (slug, name, cuisines, priceLevel, rating, ratingCount, deliveryTime, 
   image: `images/${image}.webp`, alt, address, description, discount, fast,
 });
 
+const CHEFS = {
+  "golden-fork-bistro": "Chef Lorenzo Bianchi",
+  "urban-loft-kitchen": "Chef Aynur Mammadova",
+  "market-hall-grill": "Chef Tural Aliyev",
+  "sea-breeze-terrace": "Chef Nijat Huseynov",
+  "tokyo-noodle-bar": "Chef Kenji Mori",
+  "green-bowl-co": "Chef Sevda Karimova",
+  "napoli-slice": "Chef Marco Esposito",
+  "sweet-corner-bakery": "Chef Gunel Rzayeva"
+};
+
 const restaurants = [
   R("golden-fork-bistro", "Golden Fork Bistro", ["italian", "dessert"], 2, 4.6, 128, 30, 2.5, "10:00", "23:00", "rest-bistro", "Candle-lit bistro table with plated dinner", "28 Nizami St, Baku", "Neighbourhood Italian bistro with wood-fired pizza, fresh pasta and house-made desserts.", 20, true),
   R("urban-loft-kitchen", "Urban Loft Kitchen", ["asian", "chicken", "dessert"], 2, 4.4, 96, 35, 2.5, "09:00", "23:00", "rest-loft", "Modern restaurant loft with dark wooden tables", "5 Rashid Behbudov St, Baku", "Modern loft kitchen mixing Asian street food, grilled chicken and brunch classics.", 15),
@@ -74,6 +85,34 @@ const reviews = [
   ["green-bowl-co", "Sabina", 4, "Healthy and filling. Would love more dressing options."],
   ["napoli-slice", "Rauf", 4, "Good late-night pizza, delivered at 1 am without issues."],
 ].map(([restaurant, authorName, rating, comment]) => ({ restaurant, authorName, rating, comment }));
+
+restaurants.forEach((r) => (r.chef = CHEFS[r.slug]));
+restaurants.find((r) => r.slug === "market-hall-grill").cuisines.push("grill");
+
+// Extra plated dishes (top-down photos, Unsplash licence) used by the "Most loved" orbit menu.
+dishes.push(
+  D("ribeye-steak-frites", "Ribeye Steak Frites", "market-hall-grill", 18.9, "grill", "steak-frites", "Sliced ribeye steak with fries and ketchup on a dark plate", "Grilled ribeye, skin-on fries, broccolini and smoky tomato dip.", true),
+  D("garden-salmon-salad", "Garden Salmon Salad", "sea-breeze-terrace", 14.5, "healthy", "salmon-salad", "Green salad with smoked salmon on a white plate", "Mixed leaves, smoked salmon, avocado, cucumber and lemon dressing."),
+  D("lentil-sea-bass", "Lentil Sea Bass", "sea-breeze-terrace", 17.5, "healthy", "sea-bass", "Sea bass fillet on lentils with a soft egg", "Pan-seared sea bass on warm herb lentils with a jammy egg."),
+  D("sunny-side-up", "Sunny Side Up", "green-bowl-co", 6.5, "healthy", "sunny-side-up", "Fried egg on a white plate", "Two free-range eggs fried in butter, sea salt and black pepper.")
+);
+
+// Orbit menu ("Most loved"): cut-out plate image, two-part headline, ingredients, likes, accent from the Food Wagon palette.
+const ORBIT = {
+  "ribeye-steak-frites": [["Ribeye", "Steak frites"], ["Ribeye steak", "Skin-on fries", "Broccolini", "Tomato dip", "Sea salt"], 412, "#F17228", "steak-frites"],
+  "shrimp-ramen": [["Shrimp", "Miso ramen"], ["Wheat noodles", "Miso broth", "Tiger shrimp", "Soft egg", "Spring onion"], 368, "#FFB30E", "ramen"],
+  "garden-salmon-salad": [["Garden", "Salmon salad"], ["Smoked salmon", "Mixed leaves", "Avocado", "Cucumber", "Lemon"], 254, "#F9A26C", "salmon-salad"],
+  "rainbow-salad-bowl": [["Rainbow", "Salad bowl"], ["Quinoa", "Grilled tofu", "Red cabbage", "Corn", "Egg"], 297, "#FFD37A", "salad-bowl"],
+  "lentil-sea-bass": [["Lentil", "Sea bass"], ["Sea bass", "Green lentils", "Soft egg", "Carrot", "Herb oil"], 189, "#E8894A", "sea-bass"],
+  "sunny-side-up": [["Sunny", "Side up"], ["Free-range eggs", "Butter", "Sea salt", "Black pepper"], 221, "#FFC24D", "sunny-side-up"],
+};
+const chefBy = Object.fromEntries(restaurants.map((r) => [r.slug, r.chef]));
+dishes.forEach((d) => {
+  d.likes = d.popular ? 80 + ((d.name.length * 37) % 140) : 12 + ((d.name.length * 13) % 60);
+  d.chef = chefBy[d.restaurant];
+  const o = ORBIT[d.slug];
+  if (o) Object.assign(d, { headline: o[0], ingredients: o[1], likes: o[2], accent: o[3], cutout: `images/cutouts/${o[4]}.webp`, featured: true });
+});
 
 fs.writeFileSync(path.join(__dirname, "../data/seed.json"), JSON.stringify({ restaurants, dishes, promos, reviews }, null, 2) + "\n");
 console.log("seed.json:", restaurants.length, "restaurants,", dishes.length, "dishes");

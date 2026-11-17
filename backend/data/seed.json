@@ -19,7 +19,8 @@
       "address": "28 Nizami St, Baku",
       "description": "Neighbourhood Italian bistro with wood-fired pizza, fresh pasta and house-made desserts.",
       "discount": 20,
-      "fast": true
+      "fast": true,
+      "chef": "Chef Lorenzo Bianchi"
     },
     {
       "slug": "urban-loft-kitchen",
@@ -41,7 +42,8 @@
       "address": "5 Rashid Behbudov St, Baku",
       "description": "Modern loft kitchen mixing Asian street food, grilled chicken and brunch classics.",
       "discount": 15,
-      "fast": false
+      "fast": false,
+      "chef": "Chef Aynur Mammadova"
     },
     {
       "slug": "market-hall-grill",
@@ -49,7 +51,8 @@
       "cuisines": [
         "burger",
         "chicken",
-        "healthy"
+        "healthy",
+        "grill"
       ],
       "priceLevel": 1,
       "rating": 4.2,
@@ -63,7 +66,8 @@
       "address": "12 Fizuli St, Baku",
       "description": "Busy food-hall grill for smash burgers, crispy chicken and hearty bowls.",
       "discount": 0,
-      "fast": true
+      "fast": true,
+      "chef": "Chef Tural Aliyev"
     },
     {
       "slug": "sea-breeze-terrace",
@@ -85,7 +89,8 @@
       "address": "Seaside Boulevard 3, Baku",
       "description": "Seaside terrace serving sushi, fresh salads and cold-pressed juices.",
       "discount": 10,
-      "fast": false
+      "fast": false,
+      "chef": "Chef Nijat Huseynov"
     },
     {
       "slug": "tokyo-noodle-bar",
@@ -107,7 +112,8 @@
       "address": "41 Samad Vurgun St, Baku",
       "description": "Small ramen counter with slow-cooked broths, sushi rolls and yakitori.",
       "discount": 0,
-      "fast": true
+      "fast": true,
+      "chef": "Chef Kenji Mori"
     },
     {
       "slug": "green-bowl-co",
@@ -129,7 +135,8 @@
       "address": "9 Uzeyir Hajibeyov St, Baku",
       "description": "Salad and grain bowls with fresh juices, open from breakfast.",
       "discount": 5,
-      "fast": false
+      "fast": false,
+      "chef": "Chef Sevda Karimova"
     },
     {
       "slug": "napoli-slice",
@@ -149,7 +156,8 @@
       "address": "77 Ataturk Ave, Baku",
       "description": "Late-night pizza by the slice or whole, with dough proofed for 48 hours.",
       "discount": 0,
-      "fast": true
+      "fast": true,
+      "chef": "Chef Marco Esposito"
     },
     {
       "slug": "sweet-corner-bakery",
@@ -170,7 +178,8 @@
       "address": "2 Khagani St, Baku",
       "description": "Family bakery for pancakes, brownies and fresh juice, baked every morning.",
       "discount": 0,
-      "fast": false
+      "fast": false,
+      "chef": "Chef Gunel Rzayeva"
     }
   ],
   "dishes": [
@@ -183,7 +192,9 @@
       "image": "images/pizza.webp",
       "alt": "Sliced pizza with vegetables",
       "description": "Tomato, mozzarella, peppers, olives and basil on a wood-fired base.",
-      "popular": true
+      "popular": true,
+      "likes": 104,
+      "chef": "Chef Lorenzo Bianchi"
     },
     {
       "slug": "penne-arrabbiata",
@@ -194,7 +205,9 @@
       "image": "images/pasta.webp",
       "alt": "Penne pasta in spicy tomato sauce",
       "description": "Penne in a garlicky chilli-tomato sauce with parsley.",
-      "popular": true
+      "popular": true,
+      "likes": 112,
+      "chef": "Chef Lorenzo Bianchi"
     },
     {
       "slug": "bistro-meatballs",
@@ -205,7 +218,9 @@
       "image": "images/meatballs.webp",
       "alt": "Meatballs with greens",
       "description": "Beef meatballs in tomato sauce with rocket and parmesan.",
-      "popular": false
+      "popular": false,
+      "likes": 40,
+      "chef": "Chef Lorenzo Bianchi"
     },
     {
       "slug": "chocolate-brownie",
@@ -216,7 +231,9 @@
       "image": "images/brownie.webp",
       "alt": "Chocolate brownie squares",
       "description": "Dark chocolate brownie with a soft centre.",
-      "popular": true
+      "popular": true,
+      "likes": 149,
+      "chef": "Chef Lorenzo Bianchi"
     },
     {
       "slug": "shrimp-ramen",
@@ -227,7 +244,23 @@
       "image": "images/ramen.webp",
       "alt": "Ramen bowl with shrimp and egg",
       "description": "Miso broth, noodles, shrimp, soft egg and spring onion.",
-      "popular": true
+      "popular": true,
+      "likes": 368,
+      "chef": "Chef Aynur Mammadova",
+      "headline": [
+        "Shrimp",
+        "Miso ramen"
+      ],
+      "ingredients": [
+        "Wheat noodles",
+        "Miso broth",
+        "Tiger shrimp",
+        "Soft egg",
+        "Spring onion"
+      ],
+      "accent": "#FFB30E",
+      "cutout": "images/cutouts/ramen.webp",
+      "featured": true
     },
     {
       "slug": "grilled-chicken-skewers",
@@ -238,7 +271,9 @@
       "image": "images/skewers.webp",
       "alt": "Grilled chicken skewers",
       "description": "Marinated chicken thigh skewers with herb yoghurt.",
-      "popular": true
+      "popular": true,
+      "likes": 91,
+      "chef": "Chef Aynur Mammadova"
     },
     {
       "slug": "maple-pancakes",
@@ -249,7 +284,9 @@
       "image": "images/pancakes.webp",
       "alt": "Pancakes with syrup",
       "description": "Three fluffy pancakes, maple syrup and berries.",
-      "popular": false
+      "popular": false,
+      "likes": 14,
+      "chef": "Chef Aynur Mammadova"
     },
     {
       "slug": "loft-fried-chicken",
@@ -260,7 +297,9 @@
       "image": "images/chicken.webp",
       "alt": "Crispy fried chicken pieces",
       "description": "Buttermilk fried chicken with a sweet-chilli dip.",
-      "popular": false
+      "popular": false,
+      "likes": 66,
+      "chef": "Chef Aynur Mammadova"
     },
     {
       "slug": "classic-cheeseburger",
@@ -271,7 +310,9 @@
       "image": "images/burger.webp",
       "alt": "Cheeseburger with lettuce and tomato",
       "description": "Smash beef patty, cheddar, pickles and house sauce.",
-      "popular": true
+      "popular": true,
+      "likes": 120,
+      "chef": "Chef Tural Aliyev"
     },
     {
       "slug": "double-smash-burger",
@@ -282,7 +323,9 @@
       "image": "images/burger.webp",
       "alt": "Double cheeseburger",
       "description": "Two smash patties, double cheddar and caramelised onion.",
-      "popular": false
+      "popular": false,
+      "likes": 19,
+      "chef": "Chef Tural Aliyev"
     },
     {
       "slug": "crispy-fried-chicken",
@@ -293,7 +336,9 @@
       "image": "images/chicken.webp",
       "alt": "Crispy fried chicken pieces",
       "description": "Six pieces of crunchy fried chicken with fries.",
-      "popular": true
+      "popular": true,
+      "likes": 120,
+      "chef": "Chef Tural Aliyev"
     },
     {
       "slug": "meatballs-and-greens",
@@ -304,7 +349,9 @@
       "image": "images/meatballs.webp",
       "alt": "Meatballs with greens",
       "description": "Lean beef meatballs over a big green salad.",
-      "popular": false
+      "popular": false,
+      "likes": 32,
+      "chef": "Chef Tural Aliyev"
     },
     {
       "slug": "salmon-sushi-set",
@@ -315,7 +362,9 @@
       "image": "images/sushi.webp",
       "alt": "Salmon sushi set",
       "description": "12 pieces: salmon nigiri, maki and avocado rolls.",
-      "popular": true
+      "popular": true,
+      "likes": 112,
+      "chef": "Chef Nijat Huseynov"
     },
     {
       "slug": "rainbow-salad-bowl",
@@ -326,7 +375,23 @@
       "image": "images/salad.webp",
       "alt": "Colourful salad bowl",
       "description": "Quinoa, avocado, beetroot, corn and lemon dressing.",
-      "popular": true
+      "popular": true,
+      "likes": 297,
+      "chef": "Chef Nijat Huseynov",
+      "headline": [
+        "Rainbow",
+        "Salad bowl"
+      ],
+      "ingredients": [
+        "Quinoa",
+        "Grilled tofu",
+        "Red cabbage",
+        "Corn",
+        "Egg"
+      ],
+      "accent": "#FFD37A",
+      "cutout": "images/cutouts/salad-bowl.webp",
+      "featured": true
     },
     {
       "slug": "fresh-orange-juice",
@@ -337,7 +402,9 @@
       "image": "images/juice.webp",
       "alt": "Glass of orange juice",
       "description": "Freshly squeezed oranges, 330 ml.",
-      "popular": false
+      "popular": false,
+      "likes": 66,
+      "chef": "Chef Nijat Huseynov"
     },
     {
       "slug": "seaside-poke-bowl",
@@ -348,7 +415,9 @@
       "image": "images/hero-bowl.webp",
       "alt": "Poke bowl with salmon",
       "description": "Salmon, rice, edamame, mango and sesame.",
-      "popular": false
+      "popular": false,
+      "likes": 53,
+      "chef": "Chef Nijat Huseynov"
     },
     {
       "slug": "tonkotsu-ramen",
@@ -359,7 +428,9 @@
       "image": "images/ramen.webp",
       "alt": "Ramen bowl",
       "description": "Rich bone broth, chashu, soft egg and nori.",
-      "popular": true
+      "popular": true,
+      "likes": 178,
+      "chef": "Chef Kenji Mori"
     },
     {
       "slug": "california-roll",
@@ -370,7 +441,9 @@
       "image": "images/sushi.webp",
       "alt": "Sushi rolls",
       "description": "8 pieces with crab, avocado and cucumber.",
-      "popular": false
+      "popular": false,
+      "likes": 27,
+      "chef": "Chef Kenji Mori"
     },
     {
       "slug": "teriyaki-chicken",
@@ -381,7 +454,9 @@
       "image": "images/skewers.webp",
       "alt": "Chicken skewers",
       "description": "Yakitori skewers glazed with teriyaki.",
-      "popular": false
+      "popular": false,
+      "likes": 24,
+      "chef": "Chef Kenji Mori"
     },
     {
       "slug": "yuzu-lemonade",
@@ -392,7 +467,9 @@
       "image": "images/juice.webp",
       "alt": "Glass of lemonade",
       "description": "Sparkling lemonade with yuzu citrus.",
-      "popular": false
+      "popular": false,
+      "likes": 61,
+      "chef": "Chef Kenji Mori"
     },
     {
       "slug": "green-goddess-bowl",
@@ -403,7 +480,9 @@
       "image": "images/salad.webp",
       "alt": "Green salad bowl",
       "description": "Kale, cucumber, avocado, seeds and herb dressing.",
-      "popular": true
+      "popular": true,
+      "likes": 186,
+      "chef": "Chef Sevda Karimova"
     },
     {
       "slug": "salmon-power-bowl",
@@ -414,7 +493,9 @@
       "image": "images/hero-bowl.webp",
       "alt": "Salmon bowl",
       "description": "Baked salmon, brown rice, greens and miso dressing.",
-      "popular": false
+      "popular": false,
+      "likes": 53,
+      "chef": "Chef Sevda Karimova"
     },
     {
       "slug": "chicken-grain-bowl",
@@ -425,7 +506,9 @@
       "image": "images/skewers.webp",
       "alt": "Grilled chicken",
       "description": "Grilled chicken, bulgur, roasted vegetables and tahini.",
-      "popular": false
+      "popular": false,
+      "likes": 66,
+      "chef": "Chef Sevda Karimova"
     },
     {
       "slug": "cold-pressed-orange",
@@ -436,7 +519,9 @@
       "image": "images/juice.webp",
       "alt": "Orange juice",
       "description": "Orange, carrot and ginger, cold pressed.",
-      "popular": false
+      "popular": false,
+      "likes": 19,
+      "chef": "Chef Sevda Karimova"
     },
     {
       "slug": "margherita-pizza",
@@ -447,7 +532,9 @@
       "image": "images/pizza.webp",
       "alt": "Pizza",
       "description": "Tomato, fior di latte and basil.",
-      "popular": true
+      "popular": true,
+      "likes": 112,
+      "chef": "Chef Marco Esposito"
     },
     {
       "slug": "pepperoni-pizza",
@@ -458,7 +545,9 @@
       "image": "images/pizza.webp",
       "alt": "Pizza",
       "description": "Tomato, mozzarella and spicy beef pepperoni.",
-      "popular": false
+      "popular": false,
+      "likes": 27,
+      "chef": "Chef Marco Esposito"
     },
     {
       "slug": "spaghetti-meatballs",
@@ -469,7 +558,9 @@
       "image": "images/meatballs.webp",
       "alt": "Meatballs",
       "description": "Spaghetti with beef meatballs in tomato sauce.",
-      "popular": false
+      "popular": false,
+      "likes": 71,
+      "chef": "Chef Marco Esposito"
     },
     {
       "slug": "garlic-penne",
@@ -480,7 +571,9 @@
       "image": "images/pasta.webp",
       "alt": "Pasta",
       "description": "Penne tossed in garlic butter and parmesan.",
-      "popular": false
+      "popular": false,
+      "likes": 19,
+      "chef": "Chef Marco Esposito"
     },
     {
       "slug": "berry-pancakes",
@@ -491,7 +584,9 @@
       "image": "images/pancakes.webp",
       "alt": "Pancakes",
       "description": "Pancakes with mixed berries and whipped cream.",
-      "popular": true
+      "popular": true,
+      "likes": 178,
+      "chef": "Chef Gunel Rzayeva"
     },
     {
       "slug": "fudge-brownie",
@@ -502,7 +597,9 @@
       "image": "images/brownie.webp",
       "alt": "Brownie",
       "description": "Gooey fudge brownie with walnuts.",
-      "popular": false
+      "popular": false,
+      "likes": 61,
+      "chef": "Chef Gunel Rzayeva"
     },
     {
       "slug": "brownie-sundae",
@@ -513,7 +610,9 @@
       "image": "images/brownie.webp",
       "alt": "Brownie",
       "description": "Warm brownie, vanilla ice cream and caramel.",
-      "popular": false
+      "popular": false,
+      "likes": 14,
+      "chef": "Chef Gunel Rzayeva"
     },
     {
       "slug": "morning-juice",
@@ -524,7 +623,116 @@
       "image": "images/juice.webp",
       "alt": "Juice",
       "description": "Fresh orange and apple juice.",
-      "popular": false
+      "popular": false,
+      "likes": 61,
+      "chef": "Chef Gunel Rzayeva"
+    },
+    {
+      "slug": "ribeye-steak-frites",
+      "name": "Ribeye Steak Frites",
+      "restaurant": "market-hall-grill",
+      "price": 18.9,
+      "cat": "grill",
+      "image": "images/steak-frites.webp",
+      "alt": "Sliced ribeye steak with fries and ketchup on a dark plate",
+      "description": "Grilled ribeye, skin-on fries, broccolini and smoky tomato dip.",
+      "popular": true,
+      "likes": 412,
+      "chef": "Chef Tural Aliyev",
+      "headline": [
+        "Ribeye",
+        "Steak frites"
+      ],
+      "ingredients": [
+        "Ribeye steak",
+        "Skin-on fries",
+        "Broccolini",
+        "Tomato dip",
+        "Sea salt"
+      ],
+      "accent": "#F17228",
+      "cutout": "images/cutouts/steak-frites.webp",
+      "featured": true
+    },
+    {
+      "slug": "garden-salmon-salad",
+      "name": "Garden Salmon Salad",
+      "restaurant": "sea-breeze-terrace",
+      "price": 14.5,
+      "cat": "healthy",
+      "image": "images/salmon-salad.webp",
+      "alt": "Green salad with smoked salmon on a white plate",
+      "description": "Mixed leaves, smoked salmon, avocado, cucumber and lemon dressing.",
+      "popular": false,
+      "likes": 254,
+      "chef": "Chef Nijat Huseynov",
+      "headline": [
+        "Garden",
+        "Salmon salad"
+      ],
+      "ingredients": [
+        "Smoked salmon",
+        "Mixed leaves",
+        "Avocado",
+        "Cucumber",
+        "Lemon"
+      ],
+      "accent": "#F9A26C",
+      "cutout": "images/cutouts/salmon-salad.webp",
+      "featured": true
+    },
+    {
+      "slug": "lentil-sea-bass",
+      "name": "Lentil Sea Bass",
+      "restaurant": "sea-breeze-terrace",
+      "price": 17.5,
+      "cat": "healthy",
+      "image": "images/sea-bass.webp",
+      "alt": "Sea bass fillet on lentils with a soft egg",
+      "description": "Pan-seared sea bass on warm herb lentils with a jammy egg.",
+      "popular": false,
+      "likes": 189,
+      "chef": "Chef Nijat Huseynov",
+      "headline": [
+        "Lentil",
+        "Sea bass"
+      ],
+      "ingredients": [
+        "Sea bass",
+        "Green lentils",
+        "Soft egg",
+        "Carrot",
+        "Herb oil"
+      ],
+      "accent": "#E8894A",
+      "cutout": "images/cutouts/sea-bass.webp",
+      "featured": true
+    },
+    {
+      "slug": "sunny-side-up",
+      "name": "Sunny Side Up",
+      "restaurant": "green-bowl-co",
+      "price": 6.5,
+      "cat": "healthy",
+      "image": "images/sunny-side-up.webp",
+      "alt": "Fried egg on a white plate",
+      "description": "Two free-range eggs fried in butter, sea salt and black pepper.",
+      "popular": false,
+      "likes": 221,
+      "chef": "Chef Sevda Karimova",
+      "headline": [
+        "Sunny",
+        "Side up"
+      ],
+      "ingredients": [
+        "Free-range eggs",
+        "Butter",
+        "Sea salt",
+        "Black pepper"
+      ],
+      "accent": "#FFC24D",
+      "cutout": "images/cutouts/sunny-side-up.webp",
+      "featured": true
     }
   ],
   "promos": [

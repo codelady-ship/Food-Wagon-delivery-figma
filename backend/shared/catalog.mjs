@@ -1,10 +1,11 @@
 // Pure business rules shared by the API (backend/src) and the static demo fallback (frontend/src/lib/demo-api.js).
 // Keep this file free of Node or browser APIs so both sides can import it.
 
-export const CATEGORIES = ["italian", "burger", "asian", "chicken", "healthy", "dessert", "drinks"];
+export const CATEGORIES = ["italian", "burger", "grill", "asian", "chicken", "healthy", "dessert", "drinks"];
 export const CATEGORY_LABELS = {
   italian: "Italian",
   burger: "Burgers",
+  grill: "Grill",
   asian: "Asian",
   chicken: "Chicken",
   healthy: "Healthy",
@@ -99,6 +100,7 @@ export function filterDishes(dishes, query = {}) {
       (!query.cat || query.cat === "all" || d.cat === query.cat) &&
       (!query.restaurant || d.restaurant === query.restaurant) &&
       (!query.popular || d.popular) &&
+      (!query.featured || d.featured) &&
       (!q || norm(d.name).includes(q) || norm(d.restaurantName).includes(q))
   );
 }

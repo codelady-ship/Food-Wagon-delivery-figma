@@ -11,7 +11,8 @@
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
     "seed": "node src/seed.js",
-    "test": "node --test --test-concurrency=1 test/*.test.js"
+    "test": "node --test --test-concurrency=1 test/*.test.js",
+    "dev:memory": "node scripts/dev-memory.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

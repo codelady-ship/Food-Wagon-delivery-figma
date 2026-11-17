@@ -13,6 +13,7 @@ const restaurantSchema = new mongoose.Schema(
     description: { type: String, trim: true, maxlength: 300, default: "" },
     cuisines: [{ type: String, enum: CATEGORIES }],
     priceLevel: { type: Number, min: 1, max: 3, default: 2 },
+    chef: { type: String, trim: true, maxlength: 60, default: "" },
     rating: { type: Number, min: 0, max: 5, default: 0 },
     ratingCount: { type: Number, min: 0, default: 0 },
     deliveryTime: { type: Number, min: 5, max: 120, default: 30 }, // minutes
@@ -54,6 +55,13 @@ const dishSchema = new mongoose.Schema(
     image: { type: String, required: true }, // site-relative path (images/x.webp) or API upload URL
     alt: { type: String, default: "" },
     popular: { type: Boolean, default: false },
+    featured: { type: Boolean, default: false }, // shown in the "Most loved" orbit menu
+    cutout: { type: String, default: "" }, // transparent top-down plate image for the orbit menu
+    headline: [{ type: String, maxlength: 30 }], // two-part title for the orbit menu
+    ingredients: [{ type: String, maxlength: 40 }],
+    accent: { type: String, match: /^#[0-9a-fA-F]{6}$/, default: "#F17228" },
+    chef: { type: String, maxlength: 60, default: "" },
+    likes: { type: Number, min: 0, default: 0 },
     available: { type: Boolean, default: true },
     order: { type: Number, default: 0 },
   },
