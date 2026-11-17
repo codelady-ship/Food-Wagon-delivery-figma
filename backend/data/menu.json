@@ -1,0 +1,170 @@
+{
+  "restaurants": [
+    {
+      "slug": "golden-fork-bistro",
+      "name": "Golden Fork Bistro",
+      "image": "images/rest-bistro.webp",
+      "alt": "Candle-lit bistro table with plated dinner",
+      "rating": 4.6,
+      "discount": 20,
+      "fast": true,
+      "opensAt": "10:00",
+      "closesAt": "23:00"
+    },
+    {
+      "slug": "urban-loft-kitchen",
+      "name": "Urban Loft Kitchen",
+      "image": "images/rest-loft.webp",
+      "alt": "Modern restaurant loft with dark wooden tables",
+      "rating": 4.4,
+      "discount": 15,
+      "fast": false,
+      "opensAt": "09:00",
+      "closesAt": "23:00"
+    },
+    {
+      "slug": "market-hall-grill",
+      "name": "Market Hall Grill",
+      "image": "images/rest-hall.webp",
+      "alt": "Bright food hall with wooden chairs and red lamps",
+      "rating": 4.2,
+      "discount": 0,
+      "fast": true,
+      "opensAt": "11:00",
+      "closesAt": "22:00"
+    },
+    {
+      "slug": "sea-breeze-terrace",
+      "name": "Sea Breeze Terrace",
+      "image": "images/rest-terrace.webp",
+      "alt": "Seaside restaurant terrace with blue chairs",
+      "rating": 4.7,
+      "discount": 10,
+      "fast": false,
+      "opensAt": "10:00",
+      "closesAt": "00:00"
+    }
+  ],
+  "dishes": [
+    {
+      "slug": "veggie-pizza",
+      "name": "Veggie Pizza",
+      "restaurant": "golden-fork-bistro",
+      "restaurantName": "Golden Fork Bistro",
+      "price": 12.5,
+      "cat": "italian",
+      "img": "pizza",
+      "alt": "Sliced pizza with tomatoes, onions and basil on a wooden board"
+    },
+    {
+      "slug": "classic-cheeseburger",
+      "name": "Classic Cheeseburger",
+      "restaurant": "market-hall-grill",
+      "restaurantName": "Market Hall Grill",
+      "price": 9.9,
+      "cat": "burger",
+      "img": "burger",
+      "alt": "Tall cheeseburger with lettuce and tomato"
+    },
+    {
+      "slug": "shrimp-ramen",
+      "name": "Shrimp Ramen",
+      "restaurant": "urban-loft-kitchen",
+      "restaurantName": "Urban Loft Kitchen",
+      "price": 11,
+      "cat": "asian",
+      "img": "ramen",
+      "alt": "Bowl of ramen with shrimp, boiled eggs and chopsticks"
+    },
+    {
+      "slug": "salmon-sushi-set",
+      "name": "Salmon Sushi Set",
+      "restaurant": "sea-breeze-terrace",
+      "restaurantName": "Sea Breeze Terrace",
+      "price": 15,
+      "cat": "asian",
+      "img": "sushi",
+      "alt": "Salmon sushi rolls on a dark plate"
+    },
+    {
+      "slug": "penne-arrabbiata",
+      "name": "Penne Arrabbiata",
+      "restaurant": "golden-fork-bistro",
+      "restaurantName": "Golden Fork Bistro",
+      "price": 10.5,
+      "cat": "italian",
+      "img": "pasta",
+      "alt": "Penne pasta in tomato sauce on a white plate"
+    },
+    {
+      "slug": "crispy-fried-chicken",
+      "name": "Crispy Fried Chicken",
+      "restaurant": "market-hall-grill",
+      "restaurantName": "Market Hall Grill",
+      "price": 8.9,
+      "cat": "chicken",
+      "img": "chicken",
+      "alt": "Golden fried chicken pieces on a cooling rack"
+    },
+    {
+      "slug": "grilled-chicken-skewers",
+      "name": "Grilled Chicken Skewers",
+      "restaurant": "urban-loft-kitchen",
+      "restaurantName": "Urban Loft Kitchen",
+      "price": 13.5,
+      "cat": "chicken",
+      "img": "skewers",
+      "alt": "Grilled chicken and vegetable skewers with sauces"
+    },
+    {
+      "slug": "rainbow-salad-bowl",
+      "name": "Rainbow Salad Bowl",
+      "restaurant": "sea-breeze-terrace",
+      "restaurantName": "Sea Breeze Terrace",
+      "price": 9.5,
+      "cat": "healthy",
+      "img": "salad",
+      "alt": "Salad bowl with tofu, egg, corn and red cabbage"
+    },
+    {
+      "slug": "meatballs-and-greens",
+      "name": "Meatballs & Greens",
+      "restaurant": "market-hall-grill",
+      "restaurantName": "Market Hall Grill",
+      "price": 11.5,
+      "cat": "healthy",
+      "img": "meatballs",
+      "alt": "Meatballs served on fresh lettuce leaves"
+    },
+    {
+      "slug": "maple-pancakes",
+      "name": "Maple Pancakes",
+      "restaurant": "urban-loft-kitchen",
+      "restaurantName": "Urban Loft Kitchen",
+      "price": 7.5,
+      "cat": "dessert",
+      "img": "pancakes",
+      "alt": "Stack of pancakes with syrup and butter"
+    },
+    {
+      "slug": "chocolate-brownie",
+      "name": "Chocolate Brownie",
+      "restaurant": "golden-fork-bistro",
+      "restaurantName": "Golden Fork Bistro",
+      "price": 5.5,
+      "cat": "dessert",
+      "img": "brownie",
+      "alt": "Stacked chocolate brownie squares"
+    },
+    {
+      "slug": "fresh-orange-juice",
+      "name": "Fresh Orange Juice",
+      "restaurant": "sea-breeze-terrace",
+      "restaurantName": "Sea Breeze Terrace",
+      "price": 3.9,
+      "cat": "drinks",
+      "img": "juice",
+      "alt": "Glass of fresh orange juice with a lemon slice"
+    }
+  ]
+}
