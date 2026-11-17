@@ -1,33 +1,47 @@
-const crypto = require("crypto");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("./config");
 const { HttpError } = require("./errors");
 
-const sha = (s) => crypto.createHash("sha256").update(String(s)).digest();
-const safeEqual = (a, b) => crypto.timingSafeEqual(sha(a), sha(b));
+const hashPassword = (pw) => bcrypt.hash(pw, 10);
+const checkPassword = (pw, hash) => bcrypt.compare(pw, hash);
 
-// One admin account, configured with ADMIN_EMAIL / ADMIN_PASSWORD env vars.
-function login(email, password) {
-  if (!config.jwtSecret || !config.adminEmail || !config.adminPassword) {
-    throw new HttpError(503, "Admin login is not configured on this server");
-  }
-  const okEmail = safeEqual(String(email || "").trim().toLowerCase(), config.adminEmail);
-  const okPass = safeEqual(password || "", config.adminPassword);
-  if (!okEmail || !okPass) throw new HttpError(401, "Invalid email or password");
-  return jwt.sign({ sub: config.adminEmail, role: "admin" }, config.jwtSecret, { expiresIn: "8h" });
+function signToken(user) {
+  if (!config.jwtSecret) throw new HttpError(503, "Login is not configured on this server (JWT_SECRET missing)");
+  return jwt.sign({ sub: String(user._id || user.id), role: user.role, name: user.name }, config.jwtSecret, { expiresIn: "7d" });
 }
 
-function requireAdmin(req, _res, next) {
+function readToken(req) {
   const [type, token] = (req.headers.authorization || "").split(" ");
-  if (type !== "Bearer" || !token || !config.jwtSecret) return next(new HttpError(401, "Admin token required"));
+  if (type !== "Bearer" || !token || !config.jwtSecret) return null;
   try {
-    const payload = jwt.verify(token, config.jwtSecret);
-    if (payload.role !== "admin") throw new Error("role");
-    req.admin = payload;
-    next();
+    return jwt.verify(token, config.jwtSecret);
   } catch {
-    next(new HttpError(401, "Invalid or expired token"));
+    return undefined; // present but invalid
   }
 }
 
-module.exports = { login, requireAdmin };
+// Sets req.auth when a valid token is sent; anonymous requests pass through.
+function optionalAuth(req, _res, next) {
+  const payload = readToken(req);
+  if (payload) req.auth = payload;
+  next();
+}
+
+function requireUser(req, _res, next) {
+  const payload = readToken(req);
+  if (payload === null) return next(new HttpError(401, "Please log in"));
+  if (!payload) return next(new HttpError(401, "Your session has expired, please log in again"));
+  req.auth = payload;
+  next();
+}
+
+function requireAdmin(req, res, next) {
+  requireUser(req, res, (err) => {
+    if (err) return next(err);
+    if (req.auth.role !== "admin") return next(new HttpError(403, "Admins only"));
+    next();
+  });
+}
+
+module.exports = { hashPassword, checkPassword, signToken, optionalAuth, requireUser, requireAdmin };

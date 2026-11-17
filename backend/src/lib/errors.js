@@ -38,6 +38,7 @@ function errorHandler(err, _req, res, _next) {
   if (err && err.code === 11000) return res.status(409).json({ error: "Already exists" });
   if (err && err.type === "entity.parse.failed") return res.status(400).json({ error: "Invalid JSON body" });
   if (err && err.type === "entity.too.large") return res.status(413).json({ error: "Body too large" });
+  if (err && err.name === "MulterError") return res.status(err.code === "LIMIT_FILE_SIZE" ? 413 : 400).json({ error: err.code === "LIMIT_FILE_SIZE" ? "Image is too large (max 800 KB)" : err.message });
   if (err && err.message === "Not allowed by CORS") return res.status(403).json({ error: "Origin not allowed" });
   const status = err.status || 500;
   if (status >= 500) console.error(err);

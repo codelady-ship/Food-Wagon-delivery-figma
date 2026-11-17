@@ -1,0 +1,603 @@
+{
+  "restaurants": [
+    {
+      "slug": "golden-fork-bistro",
+      "name": "Golden Fork Bistro",
+      "cuisines": [
+        "italian",
+        "dessert"
+      ],
+      "priceLevel": 2,
+      "rating": 4.6,
+      "ratingCount": 128,
+      "deliveryTime": 30,
+      "deliveryFee": 2.5,
+      "opensAt": "10:00",
+      "closesAt": "23:00",
+      "image": "images/rest-bistro.webp",
+      "alt": "Candle-lit bistro table with plated dinner",
+      "address": "28 Nizami St, Baku",
+      "description": "Neighbourhood Italian bistro with wood-fired pizza, fresh pasta and house-made desserts.",
+      "discount": 20,
+      "fast": true
+    },
+    {
+      "slug": "urban-loft-kitchen",
+      "name": "Urban Loft Kitchen",
+      "cuisines": [
+        "asian",
+        "chicken",
+        "dessert"
+      ],
+      "priceLevel": 2,
+      "rating": 4.4,
+      "ratingCount": 96,
+      "deliveryTime": 35,
+      "deliveryFee": 2.5,
+      "opensAt": "09:00",
+      "closesAt": "23:00",
+      "image": "images/rest-loft.webp",
+      "alt": "Modern restaurant loft with dark wooden tables",
+      "address": "5 Rashid Behbudov St, Baku",
+      "description": "Modern loft kitchen mixing Asian street food, grilled chicken and brunch classics.",
+      "discount": 15,
+      "fast": false
+    },
+    {
+      "slug": "market-hall-grill",
+      "name": "Market Hall Grill",
+      "cuisines": [
+        "burger",
+        "chicken",
+        "healthy"
+      ],
+      "priceLevel": 1,
+      "rating": 4.2,
+      "ratingCount": 210,
+      "deliveryTime": 20,
+      "deliveryFee": 1.5,
+      "opensAt": "11:00",
+      "closesAt": "22:00",
+      "image": "images/rest-hall.webp",
+      "alt": "Bright food hall with wooden chairs and red lamps",
+      "address": "12 Fizuli St, Baku",
+      "description": "Busy food-hall grill for smash burgers, crispy chicken and hearty bowls.",
+      "discount": 0,
+      "fast": true
+    },
+    {
+      "slug": "sea-breeze-terrace",
+      "name": "Sea Breeze Terrace",
+      "cuisines": [
+        "asian",
+        "healthy",
+        "drinks"
+      ],
+      "priceLevel": 3,
+      "rating": 4.7,
+      "ratingCount": 84,
+      "deliveryTime": 40,
+      "deliveryFee": 3,
+      "opensAt": "10:00",
+      "closesAt": "00:00",
+      "image": "images/rest-terrace.webp",
+      "alt": "Seaside restaurant terrace with blue chairs",
+      "address": "Seaside Boulevard 3, Baku",
+      "description": "Seaside terrace serving sushi, fresh salads and cold-pressed juices.",
+      "discount": 10,
+      "fast": false
+    },
+    {
+      "slug": "tokyo-noodle-bar",
+      "name": "Tokyo Noodle Bar",
+      "cuisines": [
+        "asian",
+        "chicken",
+        "drinks"
+      ],
+      "priceLevel": 2,
+      "rating": 4.5,
+      "ratingCount": 152,
+      "deliveryTime": 25,
+      "deliveryFee": 2,
+      "opensAt": "12:00",
+      "closesAt": "23:30",
+      "image": "images/ramen.webp",
+      "alt": "Bowl of ramen with egg and shrimp",
+      "address": "41 Samad Vurgun St, Baku",
+      "description": "Small ramen counter with slow-cooked broths, sushi rolls and yakitori.",
+      "discount": 0,
+      "fast": true
+    },
+    {
+      "slug": "green-bowl-co",
+      "name": "Green Bowl Co.",
+      "cuisines": [
+        "healthy",
+        "chicken",
+        "drinks"
+      ],
+      "priceLevel": 1,
+      "rating": 4.3,
+      "ratingCount": 61,
+      "deliveryTime": 20,
+      "deliveryFee": 1.5,
+      "opensAt": "08:00",
+      "closesAt": "21:00",
+      "image": "images/salad.webp",
+      "alt": "Colourful salad bowl seen from above",
+      "address": "9 Uzeyir Hajibeyov St, Baku",
+      "description": "Salad and grain bowls with fresh juices, open from breakfast.",
+      "discount": 5,
+      "fast": false
+    },
+    {
+      "slug": "napoli-slice",
+      "name": "Napoli Slice",
+      "cuisines": [
+        "italian"
+      ],
+      "priceLevel": 1,
+      "rating": 4.1,
+      "ratingCount": 176,
+      "deliveryTime": 25,
+      "deliveryFee": 1.5,
+      "opensAt": "11:00",
+      "closesAt": "02:00",
+      "image": "images/pizza.webp",
+      "alt": "Sliced pizza with vegetables",
+      "address": "77 Ataturk Ave, Baku",
+      "description": "Late-night pizza by the slice or whole, with dough proofed for 48 hours.",
+      "discount": 0,
+      "fast": true
+    },
+    {
+      "slug": "sweet-corner-bakery",
+      "name": "Sweet Corner Bakery",
+      "cuisines": [
+        "dessert",
+        "drinks"
+      ],
+      "priceLevel": 1,
+      "rating": 4.8,
+      "ratingCount": 43,
+      "deliveryTime": 15,
+      "deliveryFee": 1,
+      "opensAt": "08:00",
+      "closesAt": "20:00",
+      "image": "images/pancakes.webp",
+      "alt": "Stack of pancakes with syrup and berries",
+      "address": "2 Khagani St, Baku",
+      "description": "Family bakery for pancakes, brownies and fresh juice, baked every morning.",
+      "discount": 0,
+      "fast": false
+    }
+  ],
+  "dishes": [
+    {
+      "slug": "veggie-pizza",
+      "name": "Veggie Pizza",
+      "restaurant": "golden-fork-bistro",
+      "price": 12.5,
+      "cat": "italian",
+      "image": "images/pizza.webp",
+      "alt": "Sliced pizza with vegetables",
+      "description": "Tomato, mozzarella, peppers, olives and basil on a wood-fired base.",
+      "popular": true
+    },
+    {
+      "slug": "penne-arrabbiata",
+      "name": "Penne Arrabbiata",
+      "restaurant": "golden-fork-bistro",
+      "price": 10.5,
+      "cat": "italian",
+      "image": "images/pasta.webp",
+      "alt": "Penne pasta in spicy tomato sauce",
+      "description": "Penne in a garlicky chilli-tomato sauce with parsley.",
+      "popular": true
+    },
+    {
+      "slug": "bistro-meatballs",
+      "name": "Bistro Meatballs",
+      "restaurant": "golden-fork-bistro",
+      "price": 11.5,
+      "cat": "italian",
+      "image": "images/meatballs.webp",
+      "alt": "Meatballs with greens",
+      "description": "Beef meatballs in tomato sauce with rocket and parmesan.",
+      "popular": false
+    },
+    {
+      "slug": "chocolate-brownie",
+      "name": "Chocolate Brownie",
+      "restaurant": "golden-fork-bistro",
+      "price": 5.5,
+      "cat": "dessert",
+      "image": "images/brownie.webp",
+      "alt": "Chocolate brownie squares",
+      "description": "Dark chocolate brownie with a soft centre.",
+      "popular": true
+    },
+    {
+      "slug": "shrimp-ramen",
+      "name": "Shrimp Ramen",
+      "restaurant": "urban-loft-kitchen",
+      "price": 11,
+      "cat": "asian",
+      "image": "images/ramen.webp",
+      "alt": "Ramen bowl with shrimp and egg",
+      "description": "Miso broth, noodles, shrimp, soft egg and spring onion.",
+      "popular": true
+    },
+    {
+      "slug": "grilled-chicken-skewers",
+      "name": "Grilled Chicken Skewers",
+      "restaurant": "urban-loft-kitchen",
+      "price": 13.5,
+      "cat": "chicken",
+      "image": "images/skewers.webp",
+      "alt": "Grilled chicken skewers",
+      "description": "Marinated chicken thigh skewers with herb yoghurt.",
+      "popular": true
+    },
+    {
+      "slug": "maple-pancakes",
+      "name": "Maple Pancakes",
+      "restaurant": "urban-loft-kitchen",
+      "price": 7.5,
+      "cat": "dessert",
+      "image": "images/pancakes.webp",
+      "alt": "Pancakes with syrup",
+      "description": "Three fluffy pancakes, maple syrup and berries.",
+      "popular": false
+    },
+    {
+      "slug": "loft-fried-chicken",
+      "name": "Loft Fried Chicken",
+      "restaurant": "urban-loft-kitchen",
+      "price": 9.5,
+      "cat": "chicken",
+      "image": "images/chicken.webp",
+      "alt": "Crispy fried chicken pieces",
+      "description": "Buttermilk fried chicken with a sweet-chilli dip.",
+      "popular": false
+    },
+    {
+      "slug": "classic-cheeseburger",
+      "name": "Classic Cheeseburger",
+      "restaurant": "market-hall-grill",
+      "price": 9.9,
+      "cat": "burger",
+      "image": "images/burger.webp",
+      "alt": "Cheeseburger with lettuce and tomato",
+      "description": "Smash beef patty, cheddar, pickles and house sauce.",
+      "popular": true
+    },
+    {
+      "slug": "double-smash-burger",
+      "name": "Double Smash Burger",
+      "restaurant": "market-hall-grill",
+      "price": 12.9,
+      "cat": "burger",
+      "image": "images/burger.webp",
+      "alt": "Double cheeseburger",
+      "description": "Two smash patties, double cheddar and caramelised onion.",
+      "popular": false
+    },
+    {
+      "slug": "crispy-fried-chicken",
+      "name": "Crispy Fried Chicken",
+      "restaurant": "market-hall-grill",
+      "price": 8.9,
+      "cat": "chicken",
+      "image": "images/chicken.webp",
+      "alt": "Crispy fried chicken pieces",
+      "description": "Six pieces of crunchy fried chicken with fries.",
+      "popular": true
+    },
+    {
+      "slug": "meatballs-and-greens",
+      "name": "Meatballs and Greens",
+      "restaurant": "market-hall-grill",
+      "price": 11.5,
+      "cat": "healthy",
+      "image": "images/meatballs.webp",
+      "alt": "Meatballs with greens",
+      "description": "Lean beef meatballs over a big green salad.",
+      "popular": false
+    },
+    {
+      "slug": "salmon-sushi-set",
+      "name": "Salmon Sushi Set",
+      "restaurant": "sea-breeze-terrace",
+      "price": 15,
+      "cat": "asian",
+      "image": "images/sushi.webp",
+      "alt": "Salmon sushi set",
+      "description": "12 pieces: salmon nigiri, maki and avocado rolls.",
+      "popular": true
+    },
+    {
+      "slug": "rainbow-salad-bowl",
+      "name": "Rainbow Salad Bowl",
+      "restaurant": "sea-breeze-terrace",
+      "price": 9.5,
+      "cat": "healthy",
+      "image": "images/salad.webp",
+      "alt": "Colourful salad bowl",
+      "description": "Quinoa, avocado, beetroot, corn and lemon dressing.",
+      "popular": true
+    },
+    {
+      "slug": "fresh-orange-juice",
+      "name": "Fresh Orange Juice",
+      "restaurant": "sea-breeze-terrace",
+      "price": 3.9,
+      "cat": "drinks",
+      "image": "images/juice.webp",
+      "alt": "Glass of orange juice",
+      "description": "Freshly squeezed oranges, 330 ml.",
+      "popular": false
+    },
+    {
+      "slug": "seaside-poke-bowl",
+      "name": "Seaside Poke Bowl",
+      "restaurant": "sea-breeze-terrace",
+      "price": 13.9,
+      "cat": "healthy",
+      "image": "images/hero-bowl.webp",
+      "alt": "Poke bowl with salmon",
+      "description": "Salmon, rice, edamame, mango and sesame.",
+      "popular": false
+    },
+    {
+      "slug": "tonkotsu-ramen",
+      "name": "Tonkotsu Ramen",
+      "restaurant": "tokyo-noodle-bar",
+      "price": 12,
+      "cat": "asian",
+      "image": "images/ramen.webp",
+      "alt": "Ramen bowl",
+      "description": "Rich bone broth, chashu, soft egg and nori.",
+      "popular": true
+    },
+    {
+      "slug": "california-roll",
+      "name": "California Roll",
+      "restaurant": "tokyo-noodle-bar",
+      "price": 9,
+      "cat": "asian",
+      "image": "images/sushi.webp",
+      "alt": "Sushi rolls",
+      "description": "8 pieces with crab, avocado and cucumber.",
+      "popular": false
+    },
+    {
+      "slug": "teriyaki-chicken",
+      "name": "Teriyaki Chicken Skewers",
+      "restaurant": "tokyo-noodle-bar",
+      "price": 10.5,
+      "cat": "chicken",
+      "image": "images/skewers.webp",
+      "alt": "Chicken skewers",
+      "description": "Yakitori skewers glazed with teriyaki.",
+      "popular": false
+    },
+    {
+      "slug": "yuzu-lemonade",
+      "name": "Yuzu Lemonade",
+      "restaurant": "tokyo-noodle-bar",
+      "price": 4.2,
+      "cat": "drinks",
+      "image": "images/juice.webp",
+      "alt": "Glass of lemonade",
+      "description": "Sparkling lemonade with yuzu citrus.",
+      "popular": false
+    },
+    {
+      "slug": "green-goddess-bowl",
+      "name": "Green Goddess Bowl",
+      "restaurant": "green-bowl-co",
+      "price": 8.9,
+      "cat": "healthy",
+      "image": "images/salad.webp",
+      "alt": "Green salad bowl",
+      "description": "Kale, cucumber, avocado, seeds and herb dressing.",
+      "popular": true
+    },
+    {
+      "slug": "salmon-power-bowl",
+      "name": "Salmon Power Bowl",
+      "restaurant": "green-bowl-co",
+      "price": 12.5,
+      "cat": "healthy",
+      "image": "images/hero-bowl.webp",
+      "alt": "Salmon bowl",
+      "description": "Baked salmon, brown rice, greens and miso dressing.",
+      "popular": false
+    },
+    {
+      "slug": "chicken-grain-bowl",
+      "name": "Chicken Grain Bowl",
+      "restaurant": "green-bowl-co",
+      "price": 10.5,
+      "cat": "chicken",
+      "image": "images/skewers.webp",
+      "alt": "Grilled chicken",
+      "description": "Grilled chicken, bulgur, roasted vegetables and tahini.",
+      "popular": false
+    },
+    {
+      "slug": "cold-pressed-orange",
+      "name": "Cold-pressed Orange",
+      "restaurant": "green-bowl-co",
+      "price": 4.5,
+      "cat": "drinks",
+      "image": "images/juice.webp",
+      "alt": "Orange juice",
+      "description": "Orange, carrot and ginger, cold pressed.",
+      "popular": false
+    },
+    {
+      "slug": "margherita-pizza",
+      "name": "Margherita Pizza",
+      "restaurant": "napoli-slice",
+      "price": 9.5,
+      "cat": "italian",
+      "image": "images/pizza.webp",
+      "alt": "Pizza",
+      "description": "Tomato, fior di latte and basil.",
+      "popular": true
+    },
+    {
+      "slug": "pepperoni-pizza",
+      "name": "Pepperoni Pizza",
+      "restaurant": "napoli-slice",
+      "price": 11.5,
+      "cat": "italian",
+      "image": "images/pizza.webp",
+      "alt": "Pizza",
+      "description": "Tomato, mozzarella and spicy beef pepperoni.",
+      "popular": false
+    },
+    {
+      "slug": "spaghetti-meatballs",
+      "name": "Spaghetti and Meatballs",
+      "restaurant": "napoli-slice",
+      "price": 10.9,
+      "cat": "italian",
+      "image": "images/meatballs.webp",
+      "alt": "Meatballs",
+      "description": "Spaghetti with beef meatballs in tomato sauce.",
+      "popular": false
+    },
+    {
+      "slug": "garlic-penne",
+      "name": "Garlic Butter Penne",
+      "restaurant": "napoli-slice",
+      "price": 8.5,
+      "cat": "italian",
+      "image": "images/pasta.webp",
+      "alt": "Pasta",
+      "description": "Penne tossed in garlic butter and parmesan.",
+      "popular": false
+    },
+    {
+      "slug": "berry-pancakes",
+      "name": "Berry Pancakes",
+      "restaurant": "sweet-corner-bakery",
+      "price": 6.9,
+      "cat": "dessert",
+      "image": "images/pancakes.webp",
+      "alt": "Pancakes",
+      "description": "Pancakes with mixed berries and whipped cream.",
+      "popular": true
+    },
+    {
+      "slug": "fudge-brownie",
+      "name": "Fudge Brownie",
+      "restaurant": "sweet-corner-bakery",
+      "price": 4.5,
+      "cat": "dessert",
+      "image": "images/brownie.webp",
+      "alt": "Brownie",
+      "description": "Gooey fudge brownie with walnuts.",
+      "popular": false
+    },
+    {
+      "slug": "brownie-sundae",
+      "name": "Brownie Sundae",
+      "restaurant": "sweet-corner-bakery",
+      "price": 6.5,
+      "cat": "dessert",
+      "image": "images/brownie.webp",
+      "alt": "Brownie",
+      "description": "Warm brownie, vanilla ice cream and caramel.",
+      "popular": false
+    },
+    {
+      "slug": "morning-juice",
+      "name": "Morning Juice",
+      "restaurant": "sweet-corner-bakery",
+      "price": 3.5,
+      "cat": "drinks",
+      "image": "images/juice.webp",
+      "alt": "Juice",
+      "description": "Fresh orange and apple juice.",
+      "popular": false
+    }
+  ],
+  "promos": [
+    {
+      "code": "WELCOME10",
+      "type": "percent",
+      "value": 10,
+      "minSubtotal": 15,
+      "description": "10% off orders over $15"
+    },
+    {
+      "code": "FREESHIP",
+      "type": "free_delivery",
+      "value": 0,
+      "minSubtotal": 10,
+      "description": "Free delivery on orders over $10"
+    },
+    {
+      "code": "BIG5",
+      "type": "fixed",
+      "value": 5,
+      "minSubtotal": 40,
+      "description": "$5 off orders over $40"
+    }
+  ],
+  "reviews": [
+    {
+      "restaurant": "golden-fork-bistro",
+      "authorName": "Leyla",
+      "rating": 5,
+      "comment": "The veggie pizza arrived hot and the crust was still crisp."
+    },
+    {
+      "restaurant": "golden-fork-bistro",
+      "authorName": "Murad",
+      "rating": 4,
+      "comment": "Great pasta. Delivery took a bit longer on Friday night."
+    },
+    {
+      "restaurant": "market-hall-grill",
+      "authorName": "Aysel",
+      "rating": 4,
+      "comment": "Solid burger for the price, fries could be crispier."
+    },
+    {
+      "restaurant": "sea-breeze-terrace",
+      "authorName": "Kamran",
+      "rating": 5,
+      "comment": "Sushi set was fresh and nicely packed."
+    },
+    {
+      "restaurant": "tokyo-noodle-bar",
+      "authorName": "Nigar",
+      "rating": 5,
+      "comment": "Broth packed separately, so the noodles stayed perfect."
+    },
+    {
+      "restaurant": "sweet-corner-bakery",
+      "authorName": "Elvin",
+      "rating": 5,
+      "comment": "Best brownies in town, ordered twice this week."
+    },
+    {
+      "restaurant": "green-bowl-co",
+      "authorName": "Sabina",
+      "rating": 4,
+      "comment": "Healthy and filling. Would love more dressing options."
+    },
+    {
+      "restaurant": "napoli-slice",
+      "authorName": "Rauf",
+      "rating": 4,
+      "comment": "Good late-night pizza, delivered at 1 am without issues."
+    }
+  ]
+}
