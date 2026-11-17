@@ -1,6 +1,7 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { api } from "@/lib/api.js";
 import { errorMessage, fieldErrors } from "@/lib/utils";
+import { useApiMode } from "@/lib/hooks";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
 import { mountPage } from "@/components/site/shell";
@@ -10,6 +11,13 @@ function ContactPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<{ ok: boolean; text: string } | null>(null);
   const [busy, setBusy] = useState(false);
+  const mode = useApiMode();
+  // footer/FAQ links to #partner on this same page do not reload it, so follow the hash too
+  useEffect(() => {
+    const onHash = () => { if (location.hash === "#partner") setForm((f) => ({ ...f, topic: "partner" })); };
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
   const set = (k: keyof typeof form) => (e: { target: { value: string } }) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
   const submit = async (e: FormEvent) => {
@@ -38,7 +46,7 @@ function ContactPage() {
         <dl className="mt-8 space-y-4">
           <div>
             <dt className="mono text-muted-foreground">Order help</dt>
-            <dd>Have your FW reference ready. You can also <a href="order.html" className="text-primary-strong underline">track it yourself</a>.</dd>
+            <dd><p>Have your FW reference ready. You can also <a href="order.html" className="text-primary-strong underline">track it yourself</a>.</p></dd>
           </div>
           <div id="partner" className="scroll-mt-28">
             <dt className="mono text-muted-foreground">Restaurant partners</dt>
@@ -49,7 +57,11 @@ function ContactPage() {
             <dd>Every day, 09:00–23:00 Baku time</dd>
           </div>
         </dl>
-        <p className="mt-8 rounded-xl bg-muted p-4 text-sm">This is a portfolio demo: messages are stored in the demo database and read by the site owner.</p>
+        <p className="mt-8 rounded-xl bg-muted p-4 text-sm">
+          {mode === "demo"
+            ? "This is a portfolio demo running on sample data: your message is saved in this browser only (you can read it in the admin panel) and no email is sent."
+            : "This is a portfolio demo: messages are stored in the demo database and read by the site owner."}
+        </p>
       </div>
 
       <form onSubmit={submit} noValidate className="space-y-4 rounded-2xl bg-card p-6 ring-1 ring-foreground/5 md:p-8">

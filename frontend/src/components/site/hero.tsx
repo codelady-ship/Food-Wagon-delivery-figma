@@ -13,14 +13,17 @@ import { Button } from "@/components/ui/button";
  * cursor scrubs through the frames instead of only tilting the still image.
  * prefers-reduced-motion: everything stays still.
  */
-export const CHARACTER = { src: "hero/character.webp", width: 1200, height: 1500 };
+// Swappable hero slot: replace public/hero/character.webp with the final character (same 1200 x 1500 transparent
+// WebP, so the reserved 4:5 box and the preload in index.html keep working) and update the alt text here.
+// Until then the slot shows a steaming ramen bowl so the hero looks finished.
+export const CHARACTER = { src: "hero/character.webp", width: 1200, height: 1500, alt: "A steaming bowl of shrimp ramen, ready for delivery" };
 export const SPRITE = { src: "hero/character-sprite.webp", frames: 0 }; // 0 = no sprite sheet yet
 
 const CHIPS = [
   { src: "images/pizza.webp", alt: "", cls: "left-[-4%] top-[14%] size-[clamp(64px,9vw,132px)]", d: 46 },
   { src: "images/sushi.webp", alt: "", cls: "right-[-6%] top-[8%] size-[clamp(56px,7.5vw,112px)]", d: 64 },
   { src: "images/burger.webp", alt: "", cls: "right-[-2%] bottom-[22%] size-[clamp(60px,8vw,120px)]", d: 30 },
-  { src: "images/ramen.webp", alt: "", cls: "left-[2%] bottom-[16%] size-[clamp(48px,6vw,92px)]", d: 82 },
+  { src: "images/pancakes.webp", alt: "", cls: "left-[2%] bottom-[16%] size-[clamp(48px,6vw,92px)]", d: 82 },
 ];
 
 const clamp = (v: number) => Math.max(-1, Math.min(1, v));
@@ -107,7 +110,7 @@ export function Hero() {
           Baku · 8 kitchens · 15–40 min delivery
         </p>
 
-        <h1 id="hero-title" className="display hero__title relative z-0 mt-5 max-w-[12ch]">
+        <h1 id="hero-title" className="display hero__title relative z-0 mt-5 max-w-[7.87em]">
           <span className="sr-only">Food Wagon, food delivery in Baku: </span>
           Delivered <em>warm</em> &amp; fast.
         </h1>
@@ -124,14 +127,14 @@ export function Hero() {
                 <div
                   ref={spriteRef}
                   role="img"
-                  aria-label="Food Wagon mascot holding a coffee cup"
+                  aria-label={CHARACTER.alt}
                   className="hero__sprite"
                   style={{ backgroundImage: `url(${SPRITE.src})`, backgroundSize: `${SPRITE.frames * 100}% 100%` }}
                 />
               ) : (
                 <img
                   src={CHARACTER.src}
-                  alt="Food Wagon mascot holding a coffee cup"
+                  alt={CHARACTER.alt}
                   width={CHARACTER.width}
                   height={CHARACTER.height}
                   fetchPriority="high"
@@ -142,7 +145,7 @@ export function Hero() {
           </div>
         </div>
 
-        <form onSubmit={submit} role="search" aria-label="Find food" className="relative z-20 -mt-[clamp(48px,6vw,96px)] w-full max-w-2xl rounded-2xl bg-background p-3 text-left text-foreground shadow-[0_30px_60px_-24px_rgba(20,8,2,.65)] sm:p-4">
+        <form onSubmit={submit} action="restaurants.html" role="search" aria-label="Find food" className="relative z-20 -mt-[clamp(48px,6vw,96px)] w-full max-w-2xl rounded-2xl bg-background p-3 text-left text-foreground shadow-[0_30px_60px_-24px_rgba(20,8,2,.65)] sm:p-4">
           <div className="mb-3 flex gap-2" role="group" aria-label="Order type">
             {(["delivery", "pickup"] as const).map((m) => (
               <button
@@ -150,7 +153,7 @@ export function Hero() {
                 type="button"
                 aria-pressed={mode === m}
                 onClick={() => setMode(m)}
-                className={cn("mono min-h-11 rounded-lg px-4 text-[0.7rem] transition-colors", mode === m ? "bg-primary/12 text-primary-strong" : "text-muted-foreground hover:bg-foreground/5")}
+                className={cn("mono min-h-11 rounded-lg px-4 text-[0.75rem] transition-colors", mode === m ? "bg-primary/12 text-primary-strong" : "text-muted-foreground hover:bg-foreground/5")}
               >
                 {m === "delivery" ? "Delivery" : "Pickup"}
               </button>
@@ -162,6 +165,7 @@ export function Hero() {
             </label>
             <input
               id="hero-q"
+              name="q"
               type="search"
               value={q}
               onChange={(e) => setQ(e.target.value)}

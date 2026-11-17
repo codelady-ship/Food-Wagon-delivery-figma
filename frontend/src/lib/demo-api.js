@@ -267,9 +267,9 @@ on("GET", "/orders/:reference", ({ db, params }) => publicOrder(db.orders.find((
 on("POST", "/newsletter", ({ db, body }) => {
   check([[emailOk(body.email), "email", "Enter a valid email address"]]);
   const email = str(body.email).toLowerCase();
-  if (db.subscribers.some((s) => s.email === email)) return { ok: true, message: "You are already subscribed." };
+  if (db.subscribers.some((s) => s.email === email)) return { ok: true, message: "You are already subscribed (demo: saved in this browser only)." };
   db.subscribers.unshift({ id: id(), email, createdAt: now().toISOString() });
-  return { ok: true, message: "Thanks! You are subscribed." };
+  return { ok: true, message: "Thanks! You are subscribed. Demo mode: no emails are sent." };
 });
 on("POST", "/contact", ({ db, body }) => {
   check([
@@ -278,7 +278,7 @@ on("POST", "/contact", ({ db, body }) => {
     [str(body.message).length >= 10, "message", "Write at least 10 characters"],
   ]);
   db.messages.unshift({ id: id(), name: str(body.name), email: str(body.email), topic: body.topic || "other", message: str(body.message), handled: false, createdAt: now().toISOString() });
-  return { ok: true, message: "Thanks, we got your message and will reply within one working day." };
+  return { ok: true, message: "Thanks, your message is saved. Demo mode: it stays in this browser and no email is sent. Sign in to the admin panel to see it." };
 });
 
 on("POST", "/auth/register", async ({ db, body }) => {

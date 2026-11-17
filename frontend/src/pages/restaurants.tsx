@@ -164,9 +164,9 @@ function RestaurantsPage() {
       </form>
 
       <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
-        <p aria-live="polite" className="font-semibold">
+        <h2 aria-live="polite" className="font-sans text-base leading-normal font-semibold tracking-normal">
           {loading ? "Searching..." : `${data?.length ?? 0} restaurant${data?.length === 1 ? "" : "s"} found`}
-        </p>
+        </h2>
         {active ? (
           <Button
             variant="ghost"

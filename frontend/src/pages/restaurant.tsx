@@ -10,16 +10,35 @@ import { DishCard, ErrorBox, FavButton, LABELS, Skeleton, Stars, type Dish, type
 type Review = { id: string; authorName: string; rating: number; comment: string; createdAt: string; userId?: string | null };
 type Detail = Restaurant & { dishes: Dish[]; reviews: Review[] };
 
+/** Sets an attribute on a <head> tag, creating the tag first if the static HTML does not have it. */
+function headTag(tag: "meta" | "link", match: Record<string, string>, attr: string, value: string) {
+  const selector = tag + Object.entries(match).map(([k, v]) => `[${k}="${v}"]`).join("");
+  let el = document.head.querySelector(selector);
+  if (!el) {
+    el = document.createElement(tag);
+    Object.entries(match).forEach(([k, v]) => el!.setAttribute(k, v));
+    document.head.appendChild(el);
+  }
+  el.setAttribute(attr, value);
+}
+const meta = (key: "name" | "property", name: string, content: string) => headTag("meta", { [key]: name }, "content", content);
+
+/** Restaurant pages share one HTML file, so title, description, canonical, OG and JSON-LD are set per ?slug=. */
 function setHead(r: Detail) {
-  const url = `${location.origin}${location.pathname}?slug=${r.slug}`;
-  document.title = `${r.name} – menu, prices and delivery | Food Wagon`;
-  const desc = `${r.name}: ${r.description} Rated ${r.rating}/5, delivery in about ${r.deliveryTime} min in Baku. Order online on Food Wagon (demo).`;
-  document.querySelector('meta[name="description"]')?.setAttribute("content", desc);
-  document.querySelector('link[rel="canonical"]')?.setAttribute("href", url);
-  document.querySelector('meta[property="og:title"]')?.setAttribute("content", document.title);
-  document.querySelector('meta[property="og:description"]')?.setAttribute("content", desc);
-  document.querySelector('meta[property="og:url"]')?.setAttribute("content", url);
+  const url = `${location.origin}${location.pathname}?slug=${encodeURIComponent(r.slug)}`;
+  document.title = `${r.name} – menu and delivery | Food Wagon`;
+  let desc = `${r.name} in Baku: ${r.description} Rated ${r.rating}/5, delivery in about ${r.deliveryTime} min. Demo food delivery.`;
+  if (desc.length > 160) desc = desc.slice(0, 157).replace(/[\s,.;:–-]+\S*$/, "") + "...";
+  meta("name", "description", desc);
+  headTag("link", { rel: "canonical" }, "href", url);
+  meta("property", "og:title", document.title);
+  meta("property", "og:description", desc);
+  meta("property", "og:url", url);
+  meta("name", "twitter:title", document.title);
+  meta("name", "twitter:description", desc);
+  document.getElementById("restaurant-ld")?.remove();
   const ld = document.createElement("script");
+  ld.id = "restaurant-ld";
   ld.type = "application/ld+json";
   ld.textContent = JSON.stringify({
     "@context": "https://schema.org",
@@ -107,7 +126,12 @@ function RestaurantPage() {
   const { data, error, loading, reload } = useAsync(() => (slug ? (api(`/restaurants/${encodeURIComponent(slug)}`) as Promise<Detail>) : Promise.reject(new Error("No restaurant selected."))), [slug]);
   useEffect(() => {
     if (data) setHead(data);
-  }, [data]);
+    else if (error) {
+      // unknown or missing ?slug=: keep this "not found" view out of search results
+      meta("name", "robots", "noindex, follow");
+      document.title = "Restaurant not found | Food Wagon";
+    }
+  }, [data, error]);
 
   if (loading)
     return (
@@ -139,7 +163,7 @@ function RestaurantPage() {
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-coffee via-coffee/85 to-transparent" aria-hidden="true" />
         <div className="container-x py-12 md:py-20">
           <nav aria-label="Breadcrumb" className="mono text-background/75">
-            <a href="index.html" className="inline-flex min-h-11 items-center hover:text-white">Home</a> / <a href="restaurants.html" className="inline-flex min-h-11 items-center hover:text-white">Restaurants</a> / <span aria-current="page">{r.name}</span>
+            <a href="index.html" className="inline-flex min-h-11 min-w-11 items-center hover:text-white">Home</a> / <a href="restaurants.html" className="inline-flex min-h-11 items-center hover:text-white">Restaurants</a> / <span aria-current="page">{r.name}</span>
           </nav>
           <div className="mt-6 flex flex-wrap items-start justify-between gap-6">
             <div className="max-w-2xl">
@@ -171,7 +195,7 @@ function RestaurantPage() {
         <div>
           <nav aria-label="Menu categories" className="sticky top-[72px] z-10 -mx-4 mb-6 flex gap-2 overflow-x-auto bg-background/95 px-4 py-3 backdrop-blur">
             {cats.map((c) => (
-              <a key={c} href={`#cat-${c}`} className="mono inline-flex min-h-11 shrink-0 items-center rounded-full border border-foreground/15 px-4 text-[0.7rem] no-underline hover:border-foreground">
+              <a key={c} href={`#cat-${c}`} className="mono inline-flex min-h-11 shrink-0 items-center rounded-full border border-foreground/15 px-4 text-[0.75rem] no-underline hover:border-foreground">
                 {LABELS[c] || c}
               </a>
             ))}

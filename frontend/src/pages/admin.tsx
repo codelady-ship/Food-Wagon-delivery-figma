@@ -614,7 +614,7 @@ function AdminPage() {
       </div>
       <div className="-mx-4 mt-6 mb-8 flex gap-2 overflow-x-auto px-4 pb-2" role="tablist" aria-label="Admin sections">
         {TABS.map(([k, label]) => (
-          <button key={k} type="button" role="tab" aria-selected={tab === k} aria-controls="admin-panel" onClick={() => setTab(k)} className={cn("mono min-h-11 shrink-0 rounded-full border px-4 text-[0.7rem]", tab === k ? "border-foreground bg-foreground text-background" : "border-foreground/15 hover:border-foreground")}>
+          <button key={k} type="button" role="tab" aria-selected={tab === k} aria-controls="admin-panel" onClick={() => setTab(k)} className={cn("mono min-h-11 shrink-0 rounded-full border px-4 text-[0.75rem]", tab === k ? "border-foreground bg-foreground text-background" : "border-foreground/15 hover:border-foreground")}>
             {label}
           </button>
         ))}

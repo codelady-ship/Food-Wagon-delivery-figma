@@ -80,7 +80,7 @@ function CartPage() {
             <h2 className="text-2xl font-semibold">Summary</h2>
             <div className="mt-4 flex gap-2" role="group" aria-label="Order type">
               {(["delivery", "pickup"] as const).map((m) => (
-                <button key={m} type="button" aria-pressed={cart.mode === m} onClick={() => setCartField("mode", m)} className={cn("mono min-h-11 flex-1 rounded-lg text-[0.7rem]", cart.mode === m ? "bg-foreground text-background" : "bg-card")}>
+                <button key={m} type="button" aria-pressed={cart.mode === m} onClick={() => setCartField("mode", m)} className={cn("mono min-h-11 flex-1 rounded-lg text-[0.75rem]", cart.mode === m ? "bg-foreground text-background" : "bg-card")}>
                   {m}
                 </button>
               ))}

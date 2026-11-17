@@ -31,13 +31,15 @@ Food Wagon is a portfolio / demo project. Restaurants, chefs, prices, ratings an
 - `frontend/public/images/cutouts/*.webp` are circular, transparent crops of the plates above and of `ramen.webp` /
   `salad.webp`, made for the orbit menu.
 
-## Placeholders still to replace
+## Hero slot (to be swapped for the final character)
 
-- `frontend/public/hero/character.webp` – clearly marked placeholder for the hero character
-  (1200 × 1500 px, transparent WebP). Optional: `frontend/public/hero/character-sprite.webp`, a horizontal sprite
+- `frontend/public/hero/character.webp` – interim hero image: the steaming shrimp ramen bowl from
+  `images/cutouts/ramen.webp` with soft steam, on a transparent 1200 × 1500 px WebP. Replace it with the final
+  character at the same size and update `CHARACTER.alt` in `frontend/src/components/site/hero.tsx`; the static copy of
+  the hero in `frontend/index.html` uses the same file and alt text. Optional: `frontend/public/hero/character-sprite.webp`, a horizontal sprite
   sheet of the animated character (frames side by side, gaze from far left to far right); set `SPRITE.frames` in
   `frontend/src/components/site/hero.tsx` to the frame count to switch the hero to frame scrubbing.
-- `frontend/public/og-image.jpg` – social preview made from the hero; take a new one after the real character is in.
+- `frontend/public/og-image.jpg` – social preview (1200 × 630) made from the hero with the interim image; take a new one after the final character is in.
 
 ## Code libraries
 

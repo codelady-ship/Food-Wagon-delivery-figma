@@ -46,7 +46,7 @@ export function AuthForms({ title = "Welcome back.", adminOnly = false }: { titl
       {!adminOnly ? (
         <div className="mt-6 grid grid-cols-2 gap-2 rounded-xl bg-muted p-1" role="tablist" aria-label="Sign in or register">
           {(["login", "register"] as const).map((t) => (
-            <button key={t} type="button" role="tab" aria-selected={tab === t} onClick={() => setTab(t)} className={cn("mono min-h-11 rounded-lg text-[0.7rem]", tab === t ? "bg-card shadow" : "")}>
+            <button key={t} type="button" role="tab" aria-selected={tab === t} onClick={() => setTab(t)} className={cn("mono min-h-11 rounded-lg text-[0.75rem]", tab === t ? "bg-card shadow" : "")}>
               {t === "login" ? "Sign in" : "Create account"}
             </button>
           ))}
