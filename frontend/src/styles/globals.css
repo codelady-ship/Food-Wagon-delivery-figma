@@ -26,13 +26,18 @@
   --color-roast: #5a2a10;
   --color-caramel: #d2691e; /* caramel orange, hero right */
 
-  --font-display: "Outfit", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-mono: "Space Mono", ui-monospace, monospace;
+  --font-display: "Outfit", "Outfit Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Instrument Sans", "Instrument Sans Fallback", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Space Mono", "Space Mono Fallback", ui-monospace, monospace;
 
   --ease-expo: cubic-bezier(0.22, 1, 0.36, 1);
   --radius-card: 20px;
 }
+
+/* Metric-matched local fallbacks: text keeps the same width while the Google fonts load (no layout shift). */
+@font-face { font-family: "Outfit Fallback"; src: local("Arial"), local("Helvetica"), local("Liberation Sans"); size-adjust: 100%; }
+@font-face { font-family: "Instrument Sans Fallback"; src: local("Arial"), local("Helvetica"), local("Liberation Sans"); size-adjust: 99.5%; }
+@font-face { font-family: "Space Mono Fallback"; src: local("Courier New"), local("Courier"), local("Liberation Mono"); size-adjust: 102%; }
 
 @layer base {
   html {
@@ -62,7 +67,7 @@
 @layer components {
   .container-x { width: min(1240px, 100% - 32px); margin-inline: auto; }
   .display { font-family: var(--font-display); font-weight: 400; letter-spacing: -0.05em; line-height: 0.9; }
-  .mono { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; }
+  .mono { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; }
   .section { padding-block: clamp(56px, 7vw, 112px); }
   .dots { background-image: radial-gradient(rgba(33, 33, 33, 0.11) 1px, transparent 1px); background-size: 5px 5px; }
   .skip-link { position: absolute; left: -999px; top: 8px; z-index: 100; background: var(--color-foreground); color: #fff; padding: 10px 16px; border-radius: 8px; }
@@ -126,7 +131,7 @@
 @keyframes hero-float { from { transform: translateY(0); } to { transform: translateY(-10px); } }
 
 .hero__chip {
-  position: absolute; border-radius: 999px; overflow: hidden;
+  position: absolute; z-index: 1; border-radius: 999px; overflow: hidden;
   box-shadow: 0 18px 40px -12px rgba(20, 8, 2, 0.55), 0 0 0 4px rgba(255, 248, 230, 0.12);
   transform: translate3d(calc(var(--mx) * var(--d) * 1px), calc(var(--my) * var(--d) * 1px), 0);
   will-change: transform;
@@ -136,6 +141,9 @@
 @media (prefers-reduced-motion: reduce) {
   .hero__title, .hero__character, .hero__chip { transform: none !important; }
 }
+
+/* Reserve the header height before React mounts it (72px bar + 1px border) so nothing below shifts. */
+#site-header { min-height: 73px; }
 
 /* orbit menu sits under the sticky 72px header */
 #orbit-root .dsh-root { top: 72px; }

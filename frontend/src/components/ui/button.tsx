@@ -10,7 +10,7 @@ const variants = {
   danger: "bg-danger text-white hover:brightness-110",
 } as const;
 const sizes = {
-  sm: "min-h-11 px-4 text-[0.7rem]",
+  sm: "min-h-11 px-4 text-[0.75rem]",
   md: "min-h-12 px-5 text-[0.75rem]",
   lg: "min-h-14 px-7 text-[0.8rem]",
   icon: "size-11 p-0",

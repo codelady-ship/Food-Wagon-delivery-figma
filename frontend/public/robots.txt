@@ -1,7 +1,8 @@
+# Food Wagon is a GitHub Pages project site, so this file lives under /Food-Wagon-delivery-figma/.
+# Crawlers only read robots.txt at the host root, so private pages (cart, checkout, order, account,
+# admin) are kept out of search with <meta name="robots" content="noindex"> instead of Disallow rules
+# (a Disallow would stop crawlers from ever seeing that noindex).
 User-agent: *
 Allow: /
-Disallow: /Food-Wagon-delivery-figma/admin.html
-Disallow: /Food-Wagon-delivery-figma/checkout.html
-Disallow: /Food-Wagon-delivery-figma/cart.html
 
 Sitemap: https://codelady-ship.github.io/Food-Wagon-delivery-figma/sitemap.xml

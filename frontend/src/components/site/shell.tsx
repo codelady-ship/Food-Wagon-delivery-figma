@@ -17,7 +17,7 @@ const NAV = [
 
 export function Logo({ light = false }: { light?: boolean }) {
   return (
-    <a href="index.html" className={cn("inline-flex items-center gap-2.5 no-underline", light ? "text-background" : "text-foreground")} aria-label="Food Wagon home">
+    <a href="index.html" className={cn("inline-flex min-h-11 items-center gap-2.5 no-underline", light ? "text-background" : "text-foreground")} aria-label="Food Wagon home">
       <svg viewBox="0 0 40 40" className="size-9" aria-hidden="true">
         <rect width="40" height="40" rx="11" fill="#F17228" />
         <path d="M9 24h22l-2.2 6.2a2 2 0 0 1-1.9 1.3H13.1a2 2 0 0 1-1.9-1.3zM12 22a8 8 0 0 1 16 0z" fill="#FFB30E" />
@@ -57,7 +57,7 @@ function Header({ current }: { current: string }) {
       onClick={() => setOpen(false)}
       className={cn(
         "no-underline transition-colors hover:text-primary-strong aria-[current=page]:text-primary-strong",
-        mobile ? "block border-b border-border py-4 font-display text-2xl tracking-tight" : "mono inline-flex min-h-11 items-center px-1 text-[0.7rem]"
+        mobile ? "block border-b border-border py-4 font-display text-2xl tracking-tight" : "mono inline-flex min-h-11 items-center px-1 text-[0.75rem]"
       )}
     >
       {n.label}
@@ -72,7 +72,7 @@ function Header({ current }: { current: string }) {
           {NAV.map((n) => link(n))}
         </nav>
         <div className="flex items-center gap-2">
-          <a href="account.html" className="mono hidden min-h-11 items-center gap-2 rounded-lg px-3 text-[0.7rem] no-underline hover:bg-foreground/5 sm:inline-flex" aria-current={current === "account" ? "page" : undefined}>
+          <a href="account.html" className="mono hidden min-h-11 items-center gap-2 rounded-lg px-3 text-[0.75rem] no-underline hover:bg-foreground/5 sm:inline-flex" aria-current={current === "account" ? "page" : undefined}>
             <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
               <circle cx="12" cy="8" r="4" />
               <path d="M4 21a8 8 0 0 1 16 0" />
@@ -84,7 +84,7 @@ function Header({ current }: { current: string }) {
               <path d="M5 7h14l-1.2 11.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9zM9 7a3 3 0 0 1 6 0" />
             </svg>
             {count > 0 ? (
-              <span className="absolute -top-1.5 -right-1.5 grid min-w-5 place-items-center rounded-full bg-primary px-1 text-[0.7rem] font-bold text-white" aria-hidden="true">
+              <span className="absolute -top-1.5 -right-1.5 grid min-w-5 place-items-center rounded-full bg-primary px-1 text-[0.75rem] font-bold text-white" aria-hidden="true">
                 {count}
               </span>
             ) : null}
@@ -203,7 +203,7 @@ function Footer() {
       <ul className="space-y-0.5">
         {links.map(([href, label]) => (
           <li key={href + label}>
-            <a href={href} className="inline-flex min-h-11 items-center text-background/80 no-underline hover:text-white">
+            <a href={href} className="inline-flex min-h-11 min-w-11 items-center text-background/80 no-underline hover:text-white">
               {label}
             </a>
           </li>

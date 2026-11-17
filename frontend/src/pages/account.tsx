@@ -92,7 +92,24 @@ function AccountPage() {
   }, []);
   // a session from the other mode (live vs demo data) is not valid here
   const valid = auth && mode && auth.mode === mode ? auth : null;
-  return <div className="container-x py-10 md:py-16">{mode === null ? <Skeleton className="h-80" /> : valid ? <Dashboard auth={valid} /> : <AuthForms />}</div>;
+  return (
+    <div className="container-x py-10 md:py-16">
+      {mode === null ? (
+        <Skeleton className="h-80" />
+      ) : valid ? (
+        <Dashboard auth={valid} />
+      ) : (
+        <>
+          <AuthForms />
+          {mode === "demo" ? (
+            <p className="mx-auto mt-6 max-w-md rounded-xl bg-muted p-4 text-sm">
+              Demo mode: create an account with any name, email and an 8+ character password. Accounts, orders and favourites are saved in this browser only and no email is sent.
+            </p>
+          ) : null}
+        </>
+      )}
+    </div>
+  );
 }
 
 mountPage("account", { root: <AccountPage /> });

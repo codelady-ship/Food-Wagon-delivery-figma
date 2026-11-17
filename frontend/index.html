@@ -3,20 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Food Wagon – Food delivery in Baku from 8 local kitchens (demo)</title>
-    <meta name="description" content="Food Wagon is a demo food delivery web app for Baku: search 8 local restaurants by cuisine, price, rating and delivery time, order in a few taps and track your order live." />
+    <title>Food Wagon – Food delivery in Baku from 8 kitchens (demo)</title>
+    <meta name="description" content="Food Wagon is a demo food delivery app for Baku: search 8 local restaurants by cuisine, price and rating, order in a few taps and track your order live." />
     <link rel="canonical" href="%SITE_URL%" />
-    <meta name="theme-color" content="#F17228" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="theme-color" content="#F17228" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Food Wagon" />
-    <meta property="og:title" content="Food Wagon – Food delivery in Baku (demo)" />
-    <meta property="og:description" content="Search local restaurants, order in a few taps and track your food live. A full-stack portfolio project." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content="Food Wagon – Food delivery in Baku from 8 kitchens (demo)" />
+    <meta property="og:description" content="Food Wagon is a demo food delivery app for Baku: search 8 local restaurants by cuisine, price and rating, order in a few taps and track your order live." />
     <meta property="og:url" content="%SITE_URL%" />
     <meta property="og:image" content="%SITE_URL%og-image.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Food Wagon home page: Delivered warm and fast, with a food search box" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Food Wagon – Food delivery in Baku from 8 kitchens (demo)" />
+    <meta name="twitter:description" content="Food Wagon is a demo food delivery app for Baku: search 8 local restaurants by cuisine, price and rating, order in a few taps and track your order live." />
+    <meta name="twitter:image" content="%SITE_URL%og-image.jpg" />
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -70,19 +75,13 @@
     <div id="site-header" class="sticky top-0 z-50"></div>
 
     <main id="main">
-      <div id="hero-root">
-        <section class="hero" aria-label="Food Wagon">
-          <div class="hero__bg" aria-hidden="true"></div>
-          <div class="container-x py-24 text-center">
-            <h1 class="display hero__title">Delivered warm &amp; fast.</h1>
-          </div>
-        </section>
-      </div>
+      <!-- Static copy of <Hero /> (src/components/site/hero.tsx): first paint already matches the React render, so nothing shifts when it mounts. Keep in sync. -->
+      <div id="hero-root"><section class="hero" aria-labelledby="hero-title" data-state="idle"><div class="hero__bg" aria-hidden="true"></div><div class="hero__grain" aria-hidden="true"></div><div class="container-x relative flex flex-col items-center pt-[clamp(28px,5vw,64px)] pb-[clamp(40px,5vw,72px)] text-center"><p class="mono flex items-center gap-2 text-secondary"><span class="inline-block size-2 rounded-full bg-secondary" aria-hidden="true"></span>Baku · 8 kitchens · 15–40 min delivery</p><h1 id="hero-title" class="display hero__title relative z-0 mt-5 max-w-[7.87em]"><span class="sr-only">Food Wagon, food delivery in Baku: </span>Delivered <em>warm</em> &amp; fast.</h1><div class="hero__stage relative z-10 -mt-[clamp(20px,4vw,72px)] w-[clamp(220px,25vw,400px)]"><span class="hero__chip hidden sm:block left-[-4%] top-[14%] size-[clamp(64px,9vw,132px)]" aria-hidden="true" style="--d: 46;"><img alt="" width="132" height="132" loading="eager" src="images/pizza.webp"></span><span class="hero__chip hidden sm:block right-[-6%] top-[8%] size-[clamp(56px,7.5vw,112px)]" aria-hidden="true" style="--d: 64;"><img alt="" width="132" height="132" loading="eager" src="images/sushi.webp"></span><span class="hero__chip hidden sm:block right-[-2%] bottom-[22%] size-[clamp(60px,8vw,120px)]" aria-hidden="true" style="--d: 30;"><img alt="" width="132" height="132" loading="eager" src="images/burger.webp"></span><span class="hero__chip hidden sm:block left-[2%] bottom-[16%] size-[clamp(48px,6vw,92px)]" aria-hidden="true" style="--d: 82;"><img alt="" width="132" height="132" loading="eager" src="images/pancakes.webp"></span><div class="hero__float"><div class="hero__character aspect-[4/5]"><img alt="A steaming bowl of shrimp ramen, ready for delivery" width="1200" height="1500" fetchpriority="high" class="size-full object-contain" src="hero/character.webp"></div></div></div><form action="restaurants.html" role="search" aria-label="Find food" class="relative z-20 -mt-[clamp(48px,6vw,96px)] w-full max-w-2xl rounded-2xl bg-background p-3 text-left text-foreground shadow-[0_30px_60px_-24px_rgba(20,8,2,.65)] sm:p-4"><div class="mb-3 flex gap-2" role="group" aria-label="Order type"><button type="button" aria-pressed="true" class="mono min-h-11 rounded-lg px-4 text-[0.75rem] transition-colors bg-primary/12 text-primary-strong">Delivery</button><button type="button" aria-pressed="false" class="mono min-h-11 rounded-lg px-4 text-[0.75rem] transition-colors text-muted-foreground hover:bg-foreground/5">Pickup</button></div><div class="flex flex-col gap-2 sm:flex-row"><label for="hero-q" class="sr-only">What are you craving?</label><input id="hero-q" name="q" placeholder="Pizza, ramen, a restaurant..." autocomplete="off" class="min-h-14 flex-1 rounded-xl border border-border bg-card px-4 text-base focus:border-primary focus:outline-none" type="search" value=""><button type="submit" class="inline-flex items-center justify-center gap-2 rounded-lg font-mono font-bold uppercase tracking-[0.1em] whitespace-nowrap no-underline transition-[background,color,border-color,transform,box-shadow] duration-300 ease-[var(--ease-expo)] active:translate-y-px disabled:pointer-events-none disabled:opacity-50 cursor-pointer bg-primary text-white hover:bg-primary-strong shadow-[0_10px_24px_-10px_rgba(241,114,40,.7)] min-h-14 px-7 text-[0.8rem]">Find food</button></div></form><ul class="mono mt-7 flex flex-wrap justify-center gap-x-6 gap-y-2 text-background/85"><li>Free delivery from $30</li><li>Live order tracking</li><li>Pay on delivery or demo card</li></ul></div></section></div>
 
       <section id="how" class="section dots" aria-labelledby="how-title">
         <div class="container-x">
           <p class="mono text-primary-strong">How it works</p>
-          <h2 id="how-title" class="display mt-3 max-w-[14ch] text-[clamp(2.4rem,6vw,5.4rem)]">From craving to doorstep in four steps.</h2>
+          <h2 id="how-title" class="display mt-3 max-w-[9.2em] text-[clamp(2.4rem,6vw,5.4rem)]">From craving to doorstep in four steps.</h2>
           <ol class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             <li class="rv rounded-[var(--radius-card)] bg-card p-6 ring-1 ring-foreground/5">
               <span class="mono text-primary-strong">01</span>

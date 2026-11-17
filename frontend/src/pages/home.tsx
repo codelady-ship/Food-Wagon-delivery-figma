@@ -23,7 +23,7 @@ function PopularDishes() {
             type="button"
             aria-pressed={cat === c}
             onClick={() => setCat(c)}
-            className={cn("mono min-h-11 shrink-0 rounded-full border px-4 text-[0.7rem] transition-colors", cat === c ? "border-foreground bg-foreground text-background" : "border-foreground/15 hover:border-foreground")}
+            className={cn("mono min-h-11 shrink-0 rounded-full border px-4 text-[0.75rem] transition-colors", cat === c ? "border-foreground bg-foreground text-background" : "border-foreground/15 hover:border-foreground")}
           >
             {c === "all" ? "All" : LABELS[c]}
           </button>

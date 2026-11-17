@@ -44,7 +44,12 @@ function Tracker({ reference }: { reference: string }) {
   return (
     <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr]">
       <section aria-labelledby="status-title" className="rounded-2xl bg-coffee p-6 text-background md:p-8">
-        {fresh ? <p className="mono mb-4 text-secondary">Thank you, your order is placed</p> : null}
+        {fresh ? (
+          <div role="status" className="mb-6 rounded-xl bg-white/10 p-4 ring-1 ring-secondary/40">
+            <p className="mono text-secondary">Thank you, your demo order is placed</p>
+            <p className="mt-1 text-background/85">This is a portfolio demo: no payment was taken and no food will be delivered. The status below moves on its own so you can see how tracking works.</p>
+          </div>
+        ) : null}
         <p className="mono text-background/70">Order {order.reference}</p>
         <h2 id="status-title" className="display mt-2 text-[clamp(2.4rem,6vw,4.4rem)]" aria-live="polite">
           {order.statusLabel}
@@ -125,7 +130,7 @@ function OrderPage() {
         <p className="mt-4 flex flex-wrap items-center gap-2 text-sm">
           <span className="text-muted-foreground">Your recent orders:</span>
           {list.map((r) => (
-            <a key={r} href={`order.html?ref=${r}`} className="mono inline-flex min-h-11 items-center rounded-full bg-muted px-3 text-[0.7rem] no-underline hover:bg-secondary/30">{r}</a>
+            <a key={r} href={`order.html?ref=${r}`} className="mono inline-flex min-h-11 items-center rounded-full bg-muted px-3 text-[0.75rem] no-underline hover:bg-secondary/30">{r}</a>
           ))}
         </p>
       ) : null}

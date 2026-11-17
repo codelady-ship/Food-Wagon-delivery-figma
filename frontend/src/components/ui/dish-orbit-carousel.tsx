@@ -109,7 +109,7 @@ const FONT = "dsh-face"
 const CSS =
   ".dsh-trk{position:relative;width:100%}" +
   ".dsh-root{position:sticky;top:0;overflow:hidden;width:100%;background:var(--color-background);color:var(--color-foreground);" +
-  "font-family:" + FONT + ",Outfit,ui-sans-serif,system-ui,sans-serif;container-type:inline-size;-webkit-tap-highlight-color:transparent}" +
+  "font-family:" + FONT + ",Outfit,\"Outfit Fallback\",ui-sans-serif,system-ui,sans-serif;container-type:inline-size;-webkit-tap-highlight-color:transparent}" +
   ".dsh-root *{box-sizing:border-box}" +
   ".dsh-bd{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;pointer-events:none}" +
   ".dsh-wash{position:absolute;inset:0;background:color-mix(in oklab,var(--color-background) 38%,transparent);pointer-events:none}" +
@@ -122,12 +122,12 @@ const CSS =
   ".dsh-ico{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}" +
   ".dsh-top{position:absolute;left:800px;top:52px;display:flex;gap:14px}" +
   ".dsh-top .dsh-btn{width:44px;height:44px;display:grid;place-items:center;border-radius:10px}" +
-  ".dsh-pager{position:absolute;left:76px;top:172px;display:flex;flex-direction:column;align-items:center;gap:7px}" +
-  ".dsh-dot{width:24px;height:12px;display:grid;place-items:center}" +
+  ".dsh-pager{position:absolute;left:64px;top:92px;display:flex;flex-direction:column;align-items:center;gap:0}" +
+  ".dsh-dot{width:47px;height:47px;display:grid;place-items:center}" +
   ".dsh-dot i{display:block;width:3px;height:3px;border-radius:3px;background:var(--color-foreground);opacity:.45;transition:height .45s cubic-bezier(.3,.7,.2,1),opacity .3s}" +
   ".dsh-dot[aria-current] i{height:22px;opacity:.9}" +
-  ".dsh-dot[aria-current]{height:26px}" +
-  ".dsh-dot{transition:height .45s cubic-bezier(.3,.7,.2,1)}" +
+  
+  
   ".dsh-plates{position:absolute;left:130px;top:82px;width:245px;height:245px;touch-action:pan-y}" +
   ".dsh-orbit{position:absolute;inset:0;transform-origin:69% -217%;visibility:hidden;will-change:transform}" +
   ".dsh-orbit>img{display:block;width:245px;height:245px;max-width:none;object-fit:contain;user-select:none;-webkit-user-drag:none;" +
@@ -155,12 +155,12 @@ const CSS =
   ".dsh-badge svg{position:absolute;left:17px;bottom:9px;width:12px;height:12px;fill:var(--color-foreground);opacity:.8}" +
   ".dsh-num{position:absolute;left:10px;top:4px;font-size:36px;font-weight:700;letter-spacing:-.04em;line-height:1}" +
   ".dsh-chef{font-size:19px;font-weight:600;letter-spacing:-.01em;margin:0}" +
-  ".dsh-kit{font-size:10.5px;color:var(--color-muted-foreground);margin:3px 0 12px}" +
+  ".dsh-kit{font-size:12px;color:var(--color-muted-foreground);margin:3px 0 12px}" +
   ".dsh-desc{font-size:12.5px;line-height:1.38;margin:0;min-height:52px}" +
   ".dsh-ing{display:flex;flex-wrap:wrap;gap:5px;margin:0;padding:0;list-style:none;min-height:52px}" +
-  ".dsh-ing li{font-size:11px;padding:4px 9px;border-radius:99px;background:color-mix(in oklab,var(--color-foreground) 7%,transparent)}" +
+  ".dsh-ing li{font-size:12px;padding:4px 9px;border-radius:99px;background:color-mix(in oklab,var(--color-foreground) 7%,transparent)}" +
   ".dsh-react{display:flex;gap:12px;margin-top:20px}" +
-  ".dsh-like{display:flex;align-items:center;gap:8px;height:44px;padding:0 14px 0 10px;border-radius:99px;font-size:10.5px;" +
+  ".dsh-like{display:flex;align-items:center;gap:8px;height:44px;padding:0 14px 0 10px;border-radius:99px;font-size:12px;" +
   "background:color-mix(in oklab,var(--color-foreground) 6%,transparent);transition:background .25s}" +
   ".dsh-meh{width:44px;height:44px;display:grid;place-items:center;border-radius:99px;background:color-mix(in oklab,var(--color-foreground) 6%,transparent)}" +
   ".dsh-react .dsh-ico{width:16px;height:16px}" +
@@ -176,7 +176,7 @@ const CSS =
   ".dsh-th .dsh-btn[aria-current]{background:color-mix(in oklab,var(--color-background) 62%,transparent);box-shadow:0 10px 24px -16px rgba(0,0,0,.3)}" +
   ".dsh-th img{width:56px;height:56px;max-width:none;object-fit:contain;filter:drop-shadow(0 4px 6px rgba(0,0,0,.18));transition:transform .45s}" +
   ".dsh-th .dsh-btn[aria-current] img{transform:scale(1.06)}" +
-  ".dsh-th span{font-size:10px;line-height:1.25;text-align:center;font-weight:500;color:color-mix(in oklab,var(--color-foreground) 78%,transparent);max-width:78px}" +
+  ".dsh-th span{font-size:12px;line-height:1.2;text-align:center;font-weight:500;color:color-mix(in oklab,var(--color-foreground) 78%,transparent);max-width:78px}" +
   ".dsh-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}" +
   "@container (max-width:899px){" +
   ".dsh-canvas{position:relative;left:auto;top:auto;width:100%;height:auto;transform:none;display:flex;flex-direction:column;align-items:center;padding:14px 16px 18px}" +
@@ -443,7 +443,7 @@ export function DishOrbitCarousel({
         <div className="dsh-plates" onPointerDown={onPointerDown} onPointerUp={onPointerUp} onPointerCancel={() => (swipe.current = null)}>
           {dishes.map((d, i) => (
             <div key={i} ref={(el) => { orbits.current[i] = el }} className="dsh-orbit" aria-hidden={i !== index}>
-              <img src={d.image} alt={d.alt ?? d.title + " " + d.subtitle} width={245} height={245} draggable={false} />
+              <img src={d.image} alt={d.alt ?? d.title + " " + d.subtitle} width={245} height={245} draggable={false} loading="lazy" decoding="async" />
             </div>
           ))}
         </div>
@@ -513,7 +513,7 @@ export function DishOrbitCarousel({
               {dishes.map((d, i) => (
                 <div key={i} className="dsh-th">
                   <button type="button" className="dsh-btn" aria-current={i === index ? "true" : undefined} onClick={() => go(i)}>
-                    <img src={d.image} alt="" width={56} height={56} draggable={false} />
+                    <img src={d.image} alt="" width={56} height={56} draggable={false} loading="lazy" decoding="async" />
                     <span>{d.label ?? d.title + " " + d.subtitle}</span>
                   </button>
                 </div>
