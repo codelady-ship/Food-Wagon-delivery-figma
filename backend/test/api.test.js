@@ -243,3 +243,29 @@ test("admin: access control, CRUD, uploads, order status", async () => {
   assert.ok((await asAdmin(request(app).get("/api/admin/messages"))).body.length >= 1);
   assert.ok((await asAdmin(request(app).get("/api/admin/subscribers"))).body.length >= 1);
 });
+
+test("demo admin: seeded by seed(), can read every admin page, every write answers 403", async () => {
+  const login = await request(app).post("/api/auth/login").send({ email: "admin@foodwagon.demo", password: "demo-admin" });
+  assert.equal(login.status, 200);
+  assert.equal(login.body.user.role, "demo");
+  const asDemo = (req) => req.set("Authorization", `Bearer ${login.body.token}`);
+  for (const path of ["/stats", "/orders", "/dishes", "/promos", "/messages", "/subscribers"]) {
+    assert.equal((await asDemo(request(app).get(`/api/admin${path}`))).status, 200, path);
+  }
+  const writes = [
+    request(app).post("/api/admin/restaurants").send({ slug: "demo-x", name: "Demo X" }),
+    request(app).put("/api/admin/dishes/margherita").send({ price: 1 }),
+    request(app).delete("/api/admin/promos/WELCOME10"),
+    request(app).patch(`/api/admin/orders/${reference}`).send({ status: "cancelled" }),
+    request(app).post("/api/admin/uploads").attach("image", Buffer.from("RIFF0000WEBPVP8 "), { filename: "x.webp", contentType: "image/webp" }),
+  ];
+  for (const req of writes) {
+    const res = await asDemo(req);
+    assert.equal(res.status, 403);
+    assert.match(res.body.error, /read-only/);
+  }
+  assert.notEqual((await request(app).get(`/api/orders/${reference}`)).body.status, "cancelled");
+  // re-seeding keeps the demo account read-only and never touches the real admin
+  await seed();
+  assert.equal((await request(app).post("/api/auth/login").send({ email: "admin@test.local", password: "test-password" })).body.user.role, "admin");
+});

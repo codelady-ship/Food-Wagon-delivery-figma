@@ -36,12 +36,17 @@ function requireUser(req, _res, next) {
   next();
 }
 
+const READ_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
+const DEMO_READ_ONLY = "Demo admin is read-only: changes are not saved.";
+
+// Real admins get full rights. The public "demo" role may read every admin route; every write answers 403.
 function requireAdmin(req, res, next) {
   requireUser(req, res, (err) => {
     if (err) return next(err);
-    if (req.auth.role !== "admin") return next(new HttpError(403, "Admins only"));
-    next();
+    if (req.auth.role === "admin") return next();
+    if (req.auth.role === "demo") return next(READ_METHODS.has(req.method) ? undefined : new HttpError(403, DEMO_READ_ONLY));
+    next(new HttpError(403, "Admins only"));
   });
 }
 
-module.exports = { hashPassword, checkPassword, signToken, optionalAuth, requireUser, requireAdmin };
+module.exports = { DEMO_READ_ONLY, hashPassword, checkPassword, signToken, optionalAuth, requireUser, requireAdmin };

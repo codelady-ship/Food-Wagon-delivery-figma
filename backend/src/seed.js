@@ -1,5 +1,6 @@
 // Fills the database from backend/data/seed.json (the same file the static site uses as its offline demo data)
-// and creates/updates the admin account from ADMIN_EMAIL / ADMIN_PASSWORD.
+// and creates/updates the admin account from ADMIN_EMAIL / ADMIN_PASSWORD, plus the public read-only demo admin
+// (admin@foodwagon.demo / demo-admin, role "demo": opens every admin page, every write answers 403).
 // Usage: npm run seed            -> inserts only into empty collections
 //        npm run seed -- --reset -> wipes catalogue, promos and seed reviews first (orders and users are kept)
 const mongoose = require("mongoose");
@@ -20,6 +21,18 @@ async function ensureAdmin() {
   return config.adminEmail;
 }
 
+async function ensureDemoAdmin() {
+  const demo = config.demoAdmin;
+  if (!demo) return "skipped (DEMO_ADMIN=false)";
+  if (demo.email === config.adminEmail) return "skipped (same email as ADMIN_EMAIL)";
+  await User.findOneAndUpdate(
+    { email: demo.email },
+    { $set: { role: "demo", name: "Demo Admin", passwordHash: await hashPassword(demo.password) }, $setOnInsert: { email: demo.email } },
+    { upsert: true }
+  );
+  return demo.email;
+}
+
 async function seed({ reset = false } = {}) {
   if (reset) await Promise.all([Restaurant.deleteMany({}), Dish.deleteMany({}), Promo.deleteMany({}), Review.deleteMany({ user: { $exists: false } })]);
   const out = {};
@@ -34,6 +47,7 @@ async function seed({ reset = false } = {}) {
   await fill(Promo, data.promos, "promos");
   await fill(Review, data.reviews, "reviews");
   out.admin = await ensureAdmin();
+  out.demoAdmin = await ensureDemoAdmin();
   return out;
 }
 
@@ -48,4 +62,4 @@ if (require.main === module) {
     .finally(() => mongoose.disconnect());
 }
 
-module.exports = { seed, ensureAdmin };
+module.exports = { seed, ensureAdmin, ensureDemoAdmin };

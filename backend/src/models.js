@@ -108,7 +108,7 @@ const userSchema = new mongoose.Schema(
     name: { type: String, required: true, trim: true, maxlength: 60 },
     email: { type: String, required: true, unique: true, trim: true, lowercase: true, maxlength: 120 },
     passwordHash: { type: String, required: true },
-    role: { type: String, enum: ["user", "admin"], default: "user" },
+    role: { type: String, enum: ["user", "admin", "demo"], default: "user" }, // "demo" = public read-only admin
     favourites: [{ type: String }], // restaurant slugs
   },
   {
