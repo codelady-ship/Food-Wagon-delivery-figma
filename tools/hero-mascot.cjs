@@ -18,10 +18,13 @@ const C = {
   yellow: "#FFB30E", bag: "#2B1810", bagTop: "#44281A", cream: "#FFF8E6", blush: "#F6A07C",
 };
 
-// Placement inside the 4:5 box. The search card overlaps the lowest ~19% of the box (below y = 1215), so the
-// whole bag ends above that line (y = 1146) and the card only hides plain jacket. The body is drawn far past the
-// bottom edge so the cut is never visible.
-const TOP = 36, SCALE = 0.95;
+// Placement inside the 4:5 box, which the hero lays out exactly as it did for the previous image:
+// - the headline's last line reaches about 11.5% into the top of the box (y = 172 at the widest layout) and the idle
+//   float lifts the character by up to 10 CSS px, so the cap starts at y = 231 (TOP minus the rim) and stays clear of the letters at the top of the float;
+// - the search card overlaps the lowest 17.5-19% of the box (below y = 1215), so the whole bag ends above that
+//   line (y = 1196) and the card only hides plain jacket. The body is drawn far past the bottom edge so the cut
+//   is never visible.
+const TOP = 240, SCALE = 0.84;
 // Cream rim around the silhouette: keeps the orange cap and jacket apart from the orange side of the backdrop.
 const RIM = 9;
 
@@ -61,16 +64,16 @@ function svg(g) {
 
     <!-- delivery bag held in front -->
     <g>
-      <rect x="430" y="1160" width="340" height="240" rx="42" fill="url(#bagG)"/>
-      <rect x="430" y="1160" width="340" height="84" rx="42" fill="${C.bagTop}"/>
-      <rect x="430" y="1202" width="340" height="42" fill="${C.bagTop}"/>
-      <path d="M430 1244 H770" stroke="#1B0E08" stroke-width="6" opacity="0.6"/>
+      <rect x="430" y="1130" width="340" height="240" rx="42" fill="url(#bagG)"/>
+      <rect x="430" y="1130" width="340" height="84" rx="42" fill="${C.bagTop}"/>
+      <rect x="430" y="1172" width="340" height="42" fill="${C.bagTop}"/>
+      <path d="M430 1214 H770" stroke="#1B0E08" stroke-width="6" opacity="0.6"/>
       <!-- handle -->
-      <path d="M532 1164 C532 1112 668 1112 668 1164" fill="none" stroke="${C.bag}" stroke-width="20" stroke-linecap="round"/>
+      <path d="M532 1134 C532 1082 668 1082 668 1134" fill="none" stroke="${C.bag}" stroke-width="20" stroke-linecap="round"/>
       <!-- reflective strip -->
-      <rect x="460" y="1216" width="280" height="11" rx="5.5" fill="${C.yellow}" opacity="0.9"/>
+      <rect x="460" y="1186" width="280" height="11" rx="5.5" fill="${C.yellow}" opacity="0.9"/>
       <!-- badge: little dome -->
-      <g transform="translate(600 1322)">
+      <g transform="translate(600 1292)">
         <circle r="54" fill="${C.cap}"/>
         <path d="M-34 11 C-34 -21 34 -21 34 11 Z" fill="${C.cream}"/>
         <rect x="-43" y="13" width="86" height="12" rx="6" fill="${C.cream}"/>
@@ -80,12 +83,12 @@ function svg(g) {
 
     <!-- paws on the bag, sleeves over the paws -->
     <g>
-      <ellipse cx="416" cy="1276" rx="66" ry="72" fill="url(#fur)"/>
-      <ellipse cx="784" cy="1276" rx="66" ry="72" fill="url(#fur)"/>
-      <path d="M386 1302 q10 16 22 0 M418 1310 q10 16 22 0" fill="none" stroke="${C.furDeep}" stroke-width="7" stroke-linecap="round"/>
-      <path d="M760 1310 q10 16 22 0 M792 1302 q10 16 22 0" fill="none" stroke="${C.furDeep}" stroke-width="7" stroke-linecap="round"/>
-      <path transform="translate(12 -14)" d="M318 1180 C300 1230 318 1262 352 1250 C392 1238 420 1210 410 1160 C380 1130 336 1140 318 1180 Z" fill="${C.cap}"/>
-      <path transform="translate(-12 -14)" d="M882 1180 C900 1230 882 1262 848 1250 C808 1238 780 1210 790 1160 C820 1130 864 1140 882 1180 Z" fill="${C.cap}"/>
+      <ellipse cx="416" cy="1246" rx="66" ry="72" fill="url(#fur)"/>
+      <ellipse cx="784" cy="1246" rx="66" ry="72" fill="url(#fur)"/>
+      <path d="M386 1272 q10 16 22 0 M418 1280 q10 16 22 0" fill="none" stroke="${C.furDeep}" stroke-width="7" stroke-linecap="round"/>
+      <path d="M760 1280 q10 16 22 0 M792 1272 q10 16 22 0" fill="none" stroke="${C.furDeep}" stroke-width="7" stroke-linecap="round"/>
+      <path transform="translate(12 -44)" d="M318 1180 C300 1230 318 1262 352 1250 C392 1238 420 1210 410 1160 C380 1130 336 1140 318 1180 Z" fill="${C.cap}"/>
+      <path transform="translate(-12 -44)" d="M882 1180 C900 1230 882 1262 848 1250 C808 1238 780 1210 790 1160 C820 1130 864 1140 882 1180 Z" fill="${C.cap}"/>
     </g>
   </g>
 

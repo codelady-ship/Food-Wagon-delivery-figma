@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from "react";
 import { setCartField } from "@/lib/store.js";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -17,12 +17,12 @@ import { Button } from "@/components/ui/button";
 // character.webp is the still (1200 x 1500, transparent, looking straight ahead). It is the image in the static copy of
 // the hero in index.html (preloaded there), so it is what paints first, what shows without JavaScript, on touch-only
 // screens and under prefers-reduced-motion. The sprite sheet (SPRITE.frames frames side by side, gaze far left -> far
-// right, middle frame = the still) is fetched after mount and laid over the still once it has decoded, so the swap is
-// invisible and nothing shifts. To change the character, re-run the generator and keep both files the same size;
+// right, middle frame = the still) is fetched after mount and its frames are drawn on a <canvas> laid over the still once
+// it has decoded, so the swap is invisible and nothing shifts. A canvas is used on purpose: it is not a Largest
+// Contentful Paint candidate, so the preloaded still stays the LCP element and LCP never waits for the sheet. To change the character, re-run the generator and keep both files the same size;
 // if the alt text changes, change it in index.html too.
 export const CHARACTER = { src: "hero/character.webp", width: 1200, height: 1500, alt: "Food Wagon's courier bear holding a delivery bag" };
 export const SPRITE = { src: "hero/character-sprite.webp", frames: 9 }; // 0 = no sprite sheet, still image only
-const MID = SPRITE.frames > 1 ? Math.floor(SPRITE.frames / 2) / (SPRITE.frames - 1) : 0;
 
 const CHIPS = [
   { src: "images/pizza.webp", alt: "", cls: "left-[-40%] top-[14%] size-[clamp(64px,9vw,132px)]", d: 46 },
@@ -35,7 +35,8 @@ const clamp = (v: number) => Math.max(-1, Math.min(1, v));
 
 export function Hero() {
   const ref = useRef<HTMLElement>(null);
-  const spriteRef = useRef<HTMLDivElement>(null);
+  const spriteRef = useRef<HTMLCanvasElement>(null);
+  const paintRef = useRef<(force?: boolean) => void>(null);
   const [mode, setMode] = useState<"delivery" | "pickup">("delivery");
   const [q, setQ] = useState("");
   const [sprite, setSprite] = useState(false); // true once the sprite sheet has loaded and decoded
@@ -52,11 +53,43 @@ export function Hero() {
     let idle: ReturnType<typeof setTimeout> | undefined;
     const frames = SPRITE.frames;
     let alive = true;
+    let sheet: HTMLImageElement | undefined;
+    let drawn = -1;
+    // Draw the frame for the current pointer position; the backing store follows the displayed size (sharp at 2x).
+    const paint = (force = false) => {
+      const c = spriteRef.current;
+      if (!c || !sheet) return;
+      const fw = sheet.naturalWidth / frames;
+      const fh = sheet.naturalHeight;
+      const w = Math.max(1, Math.min(fw, Math.round(c.clientWidth * (window.devicePixelRatio || 1))));
+      const f = Math.round(((x + 1) / 2) * (frames - 1));
+      if (!force && f === drawn && c.width === w) return;
+      if (c.width !== w) {
+        c.width = w;
+        c.height = Math.round((w * fh) / fw);
+      }
+      const ctx = c.getContext("2d");
+      if (!ctx) return;
+      ctx.imageSmoothingQuality = "high";
+      ctx.clearRect(0, 0, c.width, c.height);
+      ctx.drawImage(sheet, f * fw, 0, fw, fh, 0, 0, c.width, c.height);
+      drawn = f;
+    };
+    paintRef.current = paint;
+    const onResize = () => paint(true);
     // The sheet only matters where a pointer can hover; phones keep the lighter still image.
     if (frames > 1 && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
       const img = new Image();
       img.src = SPRITE.src;
-      img.decode().then(() => alive && setSprite(true)).catch(() => {});
+      img
+        .decode()
+        .then(() => {
+          if (!alive) return;
+          sheet = img;
+          setSprite(true);
+          window.addEventListener("resize", onResize);
+        })
+        .catch(() => {});
     }
 
     const tick = () => {
@@ -64,10 +97,7 @@ export function Hero() {
       y += (ty - y) * 0.085;
       el.style.setProperty("--mx", x.toFixed(4));
       el.style.setProperty("--my", y.toFixed(4));
-      if (frames > 1 && spriteRef.current) {
-        const f = Math.round(((x + 1) / 2) * (frames - 1));
-        spriteRef.current.style.backgroundPosition = `${(f / (frames - 1)) * 100}% 0`;
-      }
+      paint();
       if (Math.abs(tx - x) > 0.0008 || Math.abs(ty - y) > 0.0008) raf = requestAnimationFrame(tick);
       else raf = 0;
     };
@@ -96,6 +126,8 @@ export function Hero() {
     reduce.addEventListener("change", onReduce);
     return () => {
       alive = false;
+      paintRef.current = null;
+      window.removeEventListener("resize", onResize);
       cancelAnimationFrame(raf);
       clearTimeout(idle);
       el.removeEventListener("pointermove", onMove);
@@ -103,6 +135,11 @@ export function Hero() {
       reduce.removeEventListener("change", onReduce);
     };
   }, []);
+
+  // First frame is on the canvas before the browser paints the commit that hides the still.
+  useLayoutEffect(() => {
+    if (sprite) paintRef.current?.(true);
+  }, [sprite]);
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
@@ -129,7 +166,7 @@ export function Hero() {
           Delivered <em>warm</em> &amp; fast.
         </h1>
 
-        <div className="hero__stage relative z-10 -mt-[clamp(2px,0.6vw,8px)] w-[clamp(212px,22.5vw,380px)]">
+        <div className="hero__stage relative z-10 -mt-[clamp(20px,4vw,72px)] w-[clamp(220px,25vw,400px)]">
           {CHIPS.map((c) => (
             <span key={c.src} className={cn("hero__chip hidden sm:block", c.cls)} style={{ ["--d" as string]: c.d }} aria-hidden="true">
               <img src={c.src} alt={c.alt} width={132} height={132} loading="eager" />
@@ -145,14 +182,7 @@ export function Hero() {
                 fetchPriority="high"
                 className="size-full object-contain"
               />
-              {sprite ? (
-                <div
-                  ref={spriteRef}
-                  aria-hidden="true"
-                  className="hero__sprite"
-                  style={{ backgroundImage: `url(${SPRITE.src})`, backgroundSize: `${SPRITE.frames * 100}% 100%`, backgroundPosition: `${MID * 100}% 0` }}
-                />
-              ) : null}
+              {sprite ? <canvas ref={spriteRef} aria-hidden="true" className="hero__sprite" /> : null}
             </div>
           </div>
         </div>
