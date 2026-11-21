@@ -31,15 +31,21 @@ Food Wagon is a portfolio / demo project. Restaurants, chefs, prices, ratings an
 - `frontend/public/images/cutouts/*.webp` are circular, transparent crops of the plates above and of `ramen.webp` /
   `salad.webp`, made for the orbit menu.
 
-## Hero slot (to be swapped for the final character)
+## Hero character
 
-- `frontend/public/hero/character.webp` – interim hero image: the steaming shrimp ramen bowl from
-  `images/cutouts/ramen.webp` with soft steam, on a transparent 1200 × 1500 px WebP. Replace it with the final
-  character at the same size and update `CHARACTER.alt` in `frontend/src/components/site/hero.tsx`; the static copy of
-  the hero in `frontend/index.html` uses the same file and alt text. Optional: `frontend/public/hero/character-sprite.webp`, a horizontal sprite
-  sheet of the animated character (frames side by side, gaze from far left to far right); set `SPRITE.frames` in
-  `frontend/src/components/site/hero.tsx` to the frame count to switch the hero to frame scrubbing.
-- `frontend/public/og-image.jpg` – social preview (1200 × 630) made from the hero with the interim image; take a new one after the final character is in.
+- The courier bear (cream fur, orange cap and jacket with the dome badge, dark delivery bag) is an original drawing
+  made for this project. It is written as SVG in `tools/hero-mascot.cjs` and rendered with
+  [sharp](https://sharp.pixelplumbing.com/) (Apache-2.0); no third-party artwork is used.
+- `frontend/public/hero/character.webp` – the still: 1200 × 1500 px, transparent, looking straight ahead. It is the
+  image in the static copy of the hero in `frontend/index.html` (first paint, no JavaScript) and the only image on
+  touch-only screens and under `prefers-reduced-motion`.
+- `frontend/public/hero/character-sprite.webp` – 9 frames side by side (800 × 1000 px each), gaze from far left to
+  far right, middle frame identical to the still. `SPRITE.frames` in `frontend/src/components/site/hero.tsx` must
+  match the frame count.
+- To redraw or re-render: `npm install --no-save sharp`, then `node tools/hero-mascot.cjs` from the repo root (it
+  writes both files into `frontend/public/hero/`). If the alt text changes, change `CHARACTER.alt` and the static
+  copy in `frontend/index.html` together.
+- `frontend/public/og-image.jpg` – social preview (1200 × 630), a screenshot of the hero with the bear.
 
 ## Code libraries
 
