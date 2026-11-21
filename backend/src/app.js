@@ -6,6 +6,7 @@ const config = require("./lib/config");
 const { createBaseApp, writeLimiter } = require("./lib/base");
 const { hashPassword, checkPassword, signToken, optionalAuth, requireUser, requireAdmin } = require("./lib/auth");
 const { HttpError, validate, notFound, errorHandler } = require("./lib/errors");
+const { demoEnabled, isDemo, demoAdminView } = require("./lib/demo");
 const { Restaurant, Dish, Order, User, Review, Promo, Subscriber, Message, Upload } = require("./models");
 const catalog = require("../shared/catalog.mjs");
 
@@ -258,7 +259,7 @@ function createApp() {
 
     const order = await Order.create({
       reference: "FW-" + crypto.randomBytes(3).toString("hex").toUpperCase(),
-      user: req.auth?.sub,
+      user: isDemo(req) ? undefined : req.auth?.sub, // the demo account is shared: never attach a visitor's order to it
       items,
       mode: o.mode,
       customer: { name: o.name, phone: o.phone, email: o.email, address: o.mode === "delivery" ? o.address : "" },
@@ -302,6 +303,7 @@ function createApp() {
   api.post("/auth/login", writeLimiter(15), validate(loginSchema), async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
     if (!user || !(await checkPassword(req.body.password, user.passwordHash))) throw new HttpError(401, "Wrong email or password");
+    if (user.role === "demo" && !demoEnabled()) throw new HttpError(401, "Wrong email or password"); // DEMO_ADMIN=false
     res.json({ token: signToken(user), user });
   });
 
@@ -310,6 +312,7 @@ function createApp() {
   });
 
   api.get("/me/orders", requireUser, async (req, res) => {
+    if (isDemo(req)) return res.json([]); // shared account: it has no orders of its own
     const rows = await Order.find({ user: req.auth.sub }).sort({ createdAt: -1 }).limit(50);
     res.json(rows.map(publicOrder));
   });
@@ -334,6 +337,7 @@ function createApp() {
   /* ----- admin ----- */
   const admin = express.Router();
   admin.use(requireAdmin);
+  admin.use(demoAdminView); // demo role: deny-by-default, personal data replaced by placeholders (lib/demo.js)
 
   admin.get("/stats", async (_req, res) => {
     const [orders, revenue, restaurants, dishes, users, subscribers, messages] = await Promise.all([

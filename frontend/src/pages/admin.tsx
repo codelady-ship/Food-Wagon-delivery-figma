@@ -5,6 +5,7 @@ import { clearAuth, setAuth } from "@/lib/store.js";
 import { toast, useAsync, useAuth } from "@/lib/hooks";
 import { cn, errorMessage, fieldErrors, formatDate, imgSrc, money } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { ConfirmButton } from "@/components/ui/confirm-button";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
 import { mountPage } from "@/components/site/shell";
 import { AuthForms } from "@/components/site/auth-forms";
@@ -259,12 +260,10 @@ function Crud<T extends Row>({
                   <Button variant="ghost" size="sm" onClick={() => setEditing({ key: keyOf(r), row: r })}>
                     Edit
                   </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
+                  <ConfirmButton
                     className="text-danger"
-                    onClick={async () => {
-                      if (!window.confirm(`Delete ${keyOf(r)}?`)) return;
+                    question={`Delete ${keyOf(r)}?`}
+                    onConfirm={async () => {
                       try {
                         await remove(keyOf(r));
                         toast("Deleted");
@@ -275,7 +274,7 @@ function Crud<T extends Row>({
                     }}
                   >
                     Delete
-                  </Button>
+                  </ConfirmButton>
                 </td>
               </tr>
             ))}
@@ -361,7 +360,7 @@ function Orders() {
               </p>
               <p className="text-sm">{o.items.map((i) => `${i.qty}× ${i.name}`).join(", ")}</p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <label htmlFor={`st-${o.reference}`} className="sr-only">
                 Status of {o.reference}
               </label>
@@ -372,16 +371,22 @@ function Orders() {
                   </option>
                 ))}
               </Select>
-              <Button
-                variant="ghost"
+              <ConfirmButton
+                size="md"
                 className="text-danger"
-                onClick={async () => {
-                  if (!window.confirm(`Delete order ${o.reference}?`)) return;
-                  await api(`/admin/orders/${o.reference}`, { method: "DELETE" }).then(reload, (err: Error) => toast(err.message, "error"));
+                question={`Delete order ${o.reference}?`}
+                onConfirm={async () => {
+                  try {
+                    await api(`/admin/orders/${o.reference}`, { method: "DELETE" });
+                    toast(`Order ${o.reference} deleted`);
+                    reload();
+                  } catch (err) {
+                    toast(errorMessage(err), "error");
+                  }
                 }}
               >
                 Delete
-              </Button>
+              </ConfirmButton>
             </div>
           </li>
         ))}
@@ -585,27 +590,34 @@ function DemoAdminButton() {
   );
 }
 
+const RESET_FLAG = "fw-demo-reset";
+
 function DemoNote({ mode, role }: { mode: string; role: string }) {
   if (mode === "live" && role !== "demo") return null;
   return (
     <div role="note" className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-[#fff6ec] p-4 text-sm ring-1 ring-primary/20">
       <p>
         <span className="mono mr-1 text-primary-strong">Demo mode.</span>
-        {mode === "live" ? " Read-only demo admin: every page opens, changes are not saved." : " Changes are not saved to a server: they stay in this browser until you reset."}
+        {mode === "live" ? " Read-only demo admin: every page opens, changes are not saved and customer details are hidden." : " Changes are not saved to a server: they stay in this browser until you reset."}
       </p>
       {mode === "demo" ? (
-        <Button
-          size="sm"
+        <ConfirmButton
           variant="outline"
-          onClick={() => {
-            if (!window.confirm("Reset all demo data in this browser?")) return;
+          confirmLabel="Yes, reset"
+          question="Reset all demo data in this browser?"
+          onConfirm={() => {
             resetDemoData();
             clearAuth();
+            try {
+              sessionStorage.setItem(RESET_FLAG, "1");
+            } catch {
+              /* storage blocked: no toast after the reload */
+            }
             window.location.reload();
           }}
         >
           Reset demo data
-        </Button>
+        </ConfirmButton>
       ) : null}
     </div>
   );
@@ -626,6 +638,14 @@ function AdminPage() {
   const [tab, setTab] = useState(() => (TABS.some(([k]) => `#${k}` === location.hash) ? location.hash.slice(1) : "overview"));
   useEffect(() => {
     apiMode().then(setMode);
+    try {
+      if (sessionStorage.getItem(RESET_FLAG)) {
+        sessionStorage.removeItem(RESET_FLAG);
+        toast("Demo data was reset");
+      }
+    } catch {
+      /* ignore */
+    }
   }, []);
   useEffect(() => {
     history.replaceState(null, "", `#${tab}`);

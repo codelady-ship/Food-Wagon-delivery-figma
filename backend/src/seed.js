@@ -1,13 +1,14 @@
 // Fills the database from backend/data/seed.json (the same file the static site uses as its offline demo data)
 // and creates/updates the admin account from ADMIN_EMAIL / ADMIN_PASSWORD, plus the public read-only demo admin
-// (admin@foodwagon.demo / demo-admin, role "demo": opens every admin page, every write answers 403).
+// (admin@foodwagon.demo / demo-admin, role "demo": opens every admin page, every write answers 403,
+// personal data is replaced by placeholders; DEMO_ADMIN=false deletes the account).
 // Usage: npm run seed            -> inserts only into empty collections
 //        npm run seed -- --reset -> wipes catalogue, promos and seed reviews first (orders and users are kept)
 const mongoose = require("mongoose");
 const config = require("./lib/config");
 const { connect } = require("./lib/db");
 const { hashPassword } = require("./lib/auth");
-const { Restaurant, Dish, Promo, Review, User } = require("./models");
+const { Restaurant, Dish, Promo, Review, User, Order } = require("./models");
 const data = require("../data/seed.json");
 
 async function ensureAdmin() {
@@ -23,13 +24,20 @@ async function ensureAdmin() {
 
 async function ensureDemoAdmin() {
   const demo = config.demoAdmin;
-  if (!demo) return "skipped (DEMO_ADMIN=false)";
+  if (!demo) {
+    // Kill switch: remove every demo account (never a real admin). Login and tokens are refused as well (lib/auth.js).
+    const { deletedCount } = await User.deleteMany({ role: "demo" });
+    return `off (DEMO_ADMIN=false, removed ${deletedCount} demo account${deletedCount === 1 ? "" : "s"})`;
+  }
   if (demo.email === config.adminEmail) return "skipped (same email as ADMIN_EMAIL)";
-  await User.findOneAndUpdate(
+  const user = await User.findOneAndUpdate(
     { email: demo.email },
-    { $set: { role: "demo", name: "Demo Admin", passwordHash: await hashPassword(demo.password) }, $setOnInsert: { email: demo.email } },
-    { upsert: true }
+    { $set: { role: "demo", name: "Demo Admin", favourites: [], passwordHash: await hashPassword(demo.password) }, $setOnInsert: { email: demo.email } },
+    { upsert: true, new: true }
   );
+  // One demo account only, and it owns nothing: orders placed while signed in as demo are not attached to it.
+  await User.deleteMany({ role: "demo", _id: { $ne: user._id } });
+  await Order.updateMany({ user: user._id }, { $unset: { user: 1 } });
   return demo.email;
 }
 
