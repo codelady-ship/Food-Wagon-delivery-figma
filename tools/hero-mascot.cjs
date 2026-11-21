@@ -25,12 +25,29 @@ const C = {
 //   line (y = 1196) and the card only hides plain jacket. The body is drawn far past the bottom edge so the cut
 //   is never visible.
 const TOP = 240, SCALE = 0.84;
-// Cream rim around the silhouette: keeps the orange cap and jacket apart from the orange side of the backdrop.
-const RIM = 9;
+// Thin warm rim light around the silhouette (not a sticker outline): just enough to keep the orange cap and jacket
+// apart from the orange side of the backdrop.
+const RIM = 5;
+
+// Body geometry (drawn in the same unscaled space as the head; the chin is at y = 1020).
+// Torso: rounded shoulders under the head, a soft belly, then straight down behind the search card.
+const TORSO = "M600 978 C722 978 832 1008 860 1090 C888 1172 884 1300 874 1500 L874 1900 L326 1900 L326 1500 C316 1300 312 1172 340 1090 C368 1008 478 978 600 978 Z";
+// Left arm as one thick stroke: out of the shoulder, elbow out to the side, forearm in to the side of the bag.
+const ARM = "M376 1074 C306 1096 258 1180 294 1250 C316 1296 380 1308 440 1290";
+const ARM_W = 88;
+// The left arm with its reflective band, knitted cuff and the paw gripping the bag; the right arm is its mirror image.
+const arm = () => `
+      <path d="${ARM}" fill="none" stroke="url(#jacket)" stroke-width="${ARM_W}" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="${ARM}" fill="none" stroke="url(#armShade)" stroke-width="${ARM_W}" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M306.5 1125.3 L295.3 1144" fill="none" stroke="${C.yellow}" stroke-width="${ARM_W + 1}"/>
+      <path d="M370 1299 L402 1298" fill="none" stroke="#AE4517" stroke-width="${ARM_W + 4}"/>
+      <path d="M380 1256 V1342 M391 1255 V1343" fill="none" stroke="#8A3410" stroke-width="3" opacity="0.6"/>
+      <ellipse cx="462" cy="1292" rx="50" ry="54" fill="url(#fur)"/>
+      <path d="M440 1316 q9 13 20 0 M466 1319 q9 13 20 0" fill="none" stroke="${C.furDeep}" stroke-width="7" stroke-linecap="round"/>`;
 
 function svg(g) {
-  // g: gaze, -1 (far left) .. 1 (far right). Only the head moves; body, bag and paws are identical in every
-  // frame, so nothing below the scarf can jump when the frame changes.
+  // g: gaze, -1 (far left) .. 1 (far right). Only the head moves; body, arms, bag and paws are identical in
+  // every frame, so nothing below the scarf can jump when the frame changes.
   const face = 30 * g, pupil = 15 * g, ear = -12 * g, capS = 18 * g, tilt = 2.2 * g;
   const cx = 600;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
@@ -39,25 +56,40 @@ function svg(g) {
     <linearGradient id="jacket" gradientUnits="userSpaceOnUse" x1="0" y1="1000" x2="0" y2="1500"><stop offset="0" stop-color="${C.capLight}"/><stop offset="0.45" stop-color="${C.cap}"/><stop offset="1" stop-color="${C.capDark}"/></linearGradient>
     <linearGradient id="capG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.capLight}"/><stop offset="1" stop-color="${C.cap}"/></linearGradient>
     <linearGradient id="bagG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.bagTop}"/><stop offset="1" stop-color="${C.bag}"/></linearGradient>
-    <clipPath id="bodyClip"><path d="M312 1900 L312 1500 C300 1210 372 1000 600 1000 C828 1000 900 1210 888 1500 L888 1900 Z"/></clipPath>
+    <clipPath id="bodyClip"><path d="${TORSO}"/></clipPath>
+    <mask id="armMask" maskUnits="userSpaceOnUse" x="0" y="900" width="${W}" height="1100">
+      <path d="${ARM}" fill="none" stroke="#fff" stroke-width="${ARM_W}" stroke-linecap="round" stroke-linejoin="round"/>
+      <path transform="translate(1200 0) scale(-1 1)" d="${ARM}" fill="none" stroke="#fff" stroke-width="${ARM_W}" stroke-linecap="round" stroke-linejoin="round"/>
+    </mask>
+    <linearGradient id="sideShade" gradientUnits="userSpaceOnUse" x1="326" y1="0" x2="874" y2="0"><stop offset="0" stop-color="#8E3510" stop-opacity="0.5"/><stop offset="0.3" stop-color="#8E3510" stop-opacity="0"/><stop offset="0.72" stop-color="#8E3510" stop-opacity="0"/><stop offset="1" stop-color="#8E3510" stop-opacity="0.34"/></linearGradient>
+    <linearGradient id="armShade" gradientUnits="userSpaceOnUse" x1="240" y1="0" x2="450" y2="0"><stop offset="0" stop-color="#8E3510" stop-opacity="0.34"/><stop offset="0.45" stop-color="#8E3510" stop-opacity="0"/><stop offset="1" stop-color="#8E3510" stop-opacity="0.12"/></linearGradient>
+    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="14"/></filter>
+    <filter id="soft6" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="7"/></filter>
     <filter id="rim" filterUnits="userSpaceOnUse" x="0" y="0" width="${W}" height="${H}">
       <feMorphology in="SourceAlpha" operator="dilate" radius="${RIM}" result="fat"/>
-      <feFlood flood-color="${C.cream}"/>
-      <feComposite in2="fat" operator="in" result="rimColour"/>
+      <feGaussianBlur in="fat" stdDeviation="0.8" result="fatSoft"/>
+      <feFlood flood-color="#FFEFD2" flood-opacity="0.96"/>
+      <feComposite in2="fatSoft" operator="in" result="rimColour"/>
       <feMerge><feMergeNode in="rimColour"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
   </defs>
 
   <g ${RIM ? 'filter="url(#rim)"' : ""}>
   <g transform="translate(600 ${TOP}) scale(${SCALE}) translate(-600 -232)">
-  <!-- body -->
+  <!-- body: nothing in this group depends on the gaze -->
   <g>
-    <path d="M312 1900 L312 1500 C300 1210 372 1000 600 1000 C828 1000 900 1210 888 1500 L888 1900 Z" fill="url(#jacket)"/>
+    <!-- torso -->
+    <path d="${TORSO}" fill="url(#jacket)"/>
     <g clip-path="url(#bodyClip)">
-      <path d="M300 1900 L300 1500 C300 1300 330 1150 400 1060 C380 1200 384 1360 400 1500 L400 1900 Z" fill="${C.capDark}" opacity="0.35"/>
-      <!-- zip line -->
-      <path d="M600 1040 L600 1900" stroke="${C.capDark}" stroke-width="8" opacity="0.55"/>
+      <rect x="300" y="960" width="600" height="960" fill="url(#sideShade)"/>
+      <!-- zip -->
+      <path d="M600 1040 L600 1900" stroke="${C.capDark}" stroke-width="8" opacity="0.6"/>
+      <!-- shadow of the head on the shoulders (static: it belongs to the body, not to the turning head) -->
+      <ellipse cx="600" cy="1024" rx="310" ry="64" fill="#6A2408" opacity="0.42" filter="url(#soft)"/>
+      <!-- shadow the bag casts on the jacket -->
+      <rect x="426" y="1150" width="348" height="244" rx="46" fill="#5A1E06" opacity="0.4" filter="url(#soft6)"/>
     </g>
+
     <!-- scarf -->
     <path d="M430 1010 C500 1075 700 1075 770 1010 C790 1040 780 1078 752 1096 C680 1140 520 1140 448 1096 C420 1078 410 1040 430 1010 Z" fill="${C.yellow}"/>
     <path d="M448 1096 C520 1140 680 1140 752 1096" fill="none" stroke="#D98E00" stroke-width="7" stroke-linecap="round" opacity="0.6"/>
@@ -81,16 +113,22 @@ function svg(g) {
       </g>
     </g>
 
-    <!-- paws on the bag, sleeves over the paws -->
-    <g>
-      <ellipse cx="416" cy="1246" rx="66" ry="72" fill="url(#fur)"/>
-      <ellipse cx="784" cy="1246" rx="66" ry="72" fill="url(#fur)"/>
-      <path d="M386 1272 q10 16 22 0 M418 1280 q10 16 22 0" fill="none" stroke="${C.furDeep}" stroke-width="7" stroke-linecap="round"/>
-      <path d="M760 1280 q10 16 22 0 M792 1272 q10 16 22 0" fill="none" stroke="${C.furDeep}" stroke-width="7" stroke-linecap="round"/>
-      <path transform="translate(12 -44)" d="M318 1180 C300 1230 318 1262 352 1250 C392 1238 420 1210 410 1160 C380 1130 336 1140 318 1180 Z" fill="${C.cap}"/>
-      <path transform="translate(-12 -44)" d="M882 1180 C900 1230 882 1262 848 1250 C808 1238 780 1210 790 1160 C820 1130 864 1140 882 1180 Z" fill="${C.cap}"/>
+    <!-- arms: out of the shoulders, round to the sides of the bag; a soft shadow under each arm on the jacket -->
+    <g clip-path="url(#bodyClip)" opacity="0.3" filter="url(#soft6)">
+      <path transform="translate(4 10)" d="${ARM}" fill="none" stroke="#7A2E0C" stroke-width="${ARM_W}" stroke-linecap="round"/>
+      <path transform="translate(1196 10) scale(-1 1)" d="${ARM}" fill="none" stroke="#7A2E0C" stroke-width="${ARM_W}" stroke-linecap="round"/>
+    </g>
+    <g>${arm()}
+    </g>
+    <g transform="translate(1200 0) scale(-1 1)">${arm()}
+    </g>
+
+    <!-- the same head shadow where it falls on the tops of the arms -->
+    <g mask="url(#armMask)">
+      <ellipse cx="600" cy="1024" rx="310" ry="64" fill="#6A2408" opacity="0.42" filter="url(#soft)"/>
     </g>
   </g>
+
 
   <!-- head -->
   <g transform="rotate(${tilt} ${cx} 900)">
