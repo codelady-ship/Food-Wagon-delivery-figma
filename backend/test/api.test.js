@@ -243,3 +243,143 @@ test("admin: access control, CRUD, uploads, order status", async () => {
   assert.ok((await asAdmin(request(app).get("/api/admin/messages"))).body.length >= 1);
   assert.ok((await asAdmin(request(app).get("/api/admin/subscribers"))).body.length >= 1);
 });
+
+test("demo admin: seeded by seed(), can read every admin page, every write answers 403", async () => {
+  const login = await request(app).post("/api/auth/login").send({ email: "admin@foodwagon.demo", password: "demo-admin" });
+  assert.equal(login.status, 200);
+  assert.equal(login.body.user.role, "demo");
+  const asDemo = (req) => req.set("Authorization", `Bearer ${login.body.token}`);
+  for (const path of ["/stats", "/orders", "/dishes", "/promos", "/messages", "/subscribers"]) {
+    assert.equal((await asDemo(request(app).get(`/api/admin${path}`))).status, 200, path);
+  }
+  const writes = [
+    request(app).post("/api/admin/restaurants").send({ slug: "demo-x", name: "Demo X" }),
+    request(app).put("/api/admin/dishes/margherita").send({ price: 1 }),
+    request(app).delete("/api/admin/promos/WELCOME10"),
+    request(app).patch(`/api/admin/orders/${reference}`).send({ status: "cancelled" }),
+    request(app).post("/api/admin/uploads").attach("image", Buffer.from("RIFF0000WEBPVP8 "), { filename: "x.webp", contentType: "image/webp" }),
+  ];
+  for (const req of writes) {
+    const res = await asDemo(req);
+    assert.equal(res.status, 403);
+    assert.match(res.body.error, /read-only/);
+  }
+  assert.notEqual((await request(app).get(`/api/orders/${reference}`)).body.status, "cancelled");
+  // re-seeding keeps the demo account read-only and never touches the real admin
+  await seed();
+  assert.equal((await request(app).post("/api/auth/login").send({ email: "admin@test.local", password: "test-password" })).body.user.role, "admin");
+});
+
+test("demo admin: no personal data in any admin GET, filters are not an oracle", async () => {
+  const { DEMO_VIEWS } = require("../src/lib/demo");
+  const secret = { name: "Zarifa Qurbanova", phone: "+994 51 987 65 43", email: "zarifa.private@realmail.test", address: "Hidden Lane 77, flat 12", note: "Gate code 4471", message: "Please call my husband Orkhan back today." };
+  const order = await request(app).post("/api/orders").send({ items: [{ dish: "veggie-pizza", qty: 1 }], mode: "delivery", name: secret.name, phone: secret.phone, email: secret.email, address: secret.address, note: secret.note });
+  assert.equal(order.status, 201);
+  assert.equal((await request(app).post("/api/contact").send({ name: secret.name, email: secret.email, topic: "order", message: secret.message })).status, 201);
+  assert.equal((await request(app).post("/api/newsletter").send({ email: secret.email })).status, 201);
+
+  const token = (await request(app).post("/api/auth/login").send({ email: "admin@foodwagon.demo", password: "demo-admin" })).body.token;
+  const asDemo = (req) => req.set("Authorization", `Bearer ${token}`);
+  // every personal value this test file has written so far, whole and in parts
+  const forbidden = [secret.name, "Zarifa", "Qurbanova", secret.phone, "987 65 43", secret.email, "zarifa", "realmail", secret.address, "Hidden Lane", secret.note, "4471", secret.message, "Orkhan", "Test Customer", "+994 50 000 00 00", "Nizami street 10", "+994 55 111 22 33", "Some street 1", "ann@x.co", "a@b.co", "Lovely demo site", "admin@test.local"];
+  const paths = Object.keys(DEMO_VIEWS);
+  assert.deepEqual([...paths].sort(), ["/dishes", "/messages", "/orders", "/promos", "/stats", "/subscribers"]);
+  for (const path of [...paths, "/orders?status=received", "/orders?q=Zarifa&search=Zarifa&sort=customer.name&customer.name=Zarifa", "/messages?email=" + encodeURIComponent(secret.email), "/subscribers?sort=email&q=zarifa"]) {
+    const res = await asDemo(request(app).get(`/api/admin${path}`));
+    assert.equal(res.status, 200, path);
+    const text = JSON.stringify(res.body).toLowerCase();
+    for (const value of forbidden) assert.ok(!text.includes(value.toLowerCase()), `${path} leaks "${value}"`);
+  }
+
+  // rows are still listed, with placeholders, and unknown query parameters change nothing
+  const orders = (await asDemo(request(app).get("/api/admin/orders"))).body;
+  const mine = orders.find((o) => o.reference === order.body.reference);
+  assert.deepEqual(mine.customer, { name: mine.customer.name, phone: "+000 00 000 00 00", email: mine.customer.email, address: "Hidden in the public demo" });
+  assert.match(mine.customer.name, /^Customer \d+$/);
+  assert.match(mine.customer.email, /^hidden-\d+@demo\.invalid$/);
+  assert.equal(mine.note, "Hidden in the public demo");
+  assert.equal(mine.user, undefined);
+  assert.equal(mine.total, order.body.total);
+  assert.deepEqual((await asDemo(request(app).get("/api/admin/orders?customer.name=Nobody&q=nobody"))).body, orders);
+  const messages = (await asDemo(request(app).get("/api/admin/messages"))).body;
+  assert.ok(messages.length >= 2 && messages.every((m) => m.message === "Hidden in the public demo" && /^Visitor \d+$/.test(m.name) && /@demo\.invalid$/.test(m.email)));
+  const subs = (await asDemo(request(app).get("/api/admin/subscribers"))).body;
+  assert.ok(subs.length >= 2 && subs.every((s) => /^hidden-\d+@demo\.invalid$/.test(s.email)));
+  assert.equal(new Set(subs.map((s) => s.email)).size, subs.length);
+
+  // an admin GET that is not listed in lib/demo.js is refused for the demo role (deny by default)
+  assert.equal((await asDemo(request(app).get("/api/admin/users"))).status, 403);
+  assert.equal((await asAdmin(request(app).get("/api/admin/users"))).status, 404);
+
+  // the real admin still sees everything
+  const full = (await asAdmin(request(app).get("/api/admin/orders"))).body.find((o) => o.reference === order.body.reference);
+  assert.deepEqual({ name: full.customer.name, phone: full.customer.phone, email: full.customer.email, address: full.customer.address, note: full.note }, { name: secret.name, phone: secret.phone, email: secret.email, address: secret.address, note: secret.note });
+  assert.ok((await asAdmin(request(app).get("/api/admin/messages"))).body.some((m) => m.message === secret.message && m.email === secret.email));
+  assert.ok((await asAdmin(request(app).get("/api/admin/subscribers"))).body.some((s) => s.email === secret.email));
+});
+
+test("demo account is shared: it owns no orders and cannot review or save favourites", async () => {
+  const { User, Order, Review } = require("../src/models");
+  const token = (await request(app).post("/api/auth/login").send({ email: "admin@foodwagon.demo", password: "demo-admin" })).body.token;
+  const asDemo = (req) => req.set("Authorization", `Bearer ${token}`);
+  const demo = await User.findOne({ role: "demo" });
+
+  const placed = await asDemo(request(app).post("/api/orders")).send({ items: [{ dish: "morning-juice", qty: 1 }], mode: "pickup", name: "Private Visitor", phone: "+994 70 123 45 67" });
+  assert.equal(placed.status, 201); // a visitor signed in as demo can still order, as a guest
+  assert.equal((await Order.findOne({ reference: placed.body.reference })).user, undefined);
+  assert.equal(await Order.countDocuments({ user: demo._id }), 0);
+  assert.deepEqual((await asDemo(request(app).get("/api/me/orders"))).body, []);
+
+  // an order attached to the demo account by an older version stays hidden, and is detached on the next seed
+  await Order.updateOne({ reference: placed.body.reference }, { user: demo._id });
+  assert.deepEqual((await asDemo(request(app).get("/api/me/orders"))).body, []);
+  await seed();
+  assert.equal(await Order.countDocuments({ user: demo._id }), 0);
+
+  const reviews = await Review.countDocuments();
+  for (const req of [
+    request(app).post("/api/restaurants/napoli-slice/reviews").send({ rating: 1, comment: "spam" }),
+    request(app).put("/api/me/favourites/napoli-slice"),
+    request(app).delete("/api/me/favourites/napoli-slice"),
+  ]) {
+    const res = await asDemo(req);
+    assert.equal(res.status, 403);
+    assert.match(res.body.error, /read-only/);
+  }
+  assert.equal(await Review.countDocuments(), reviews);
+  assert.deepEqual([...(await User.findById(demo._id)).favourites], []);
+  assert.deepEqual((await asDemo(request(app).get("/api/me/favourites"))).body, []);
+});
+
+test("DEMO_ADMIN=false: account removed, demo login refused, issued demo tokens rejected", async () => {
+  const config = require("../src/lib/config");
+  const { User } = require("../src/models");
+  const demoLogin = () => request(app).post("/api/auth/login").send({ email: "admin@foodwagon.demo", password: "demo-admin" });
+  const token = (await demoLogin()).body.token; // issued while the demo was on
+  const asDemo = (req) => req.set("Authorization", `Bearer ${token}`);
+  assert.equal((await asDemo(request(app).get("/api/admin/stats"))).status, 200);
+
+  const on = config.demoAdmin;
+  config.demoAdmin = null; // what DEMO_ADMIN=false sets
+  try {
+    // even before the next start removes the account: no login, and the old token is dead everywhere
+    assert.equal((await demoLogin()).status, 401);
+    for (const path of ["/api/admin/stats", "/api/admin/orders", "/api/admin/messages", "/api/admin/subscribers", "/api/auth/me", "/api/me/orders"]) {
+      assert.equal((await asDemo(request(app).get(path))).status, 401, path);
+    }
+    assert.equal((await asDemo(request(app).post("/api/admin/promos")).send({})).status, 401);
+
+    const out = await seed();
+    assert.equal(out.demoAdmin, "off (DEMO_ADMIN=false, removed 1 demo account)");
+    assert.equal(await User.countDocuments({ role: "demo" }), 0);
+    assert.equal(await User.countDocuments({ email: "admin@foodwagon.demo" }), 0);
+    assert.equal((await demoLogin()).status, 401);
+    // the real admin is untouched
+    assert.equal((await asAdmin(request(app).get("/api/admin/stats"))).status, 200);
+    assert.equal((await request(app).post("/api/auth/login").send({ email: "admin@test.local", password: "test-password" })).body.user.role, "admin");
+  } finally {
+    config.demoAdmin = on;
+  }
+  await seed(); // switched back on: the account is created again
+  assert.equal((await demoLogin()).body.user.role, "demo");
+});

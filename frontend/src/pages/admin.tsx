@@ -1,10 +1,11 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { api, apiMode } from "@/lib/api.js";
-import { DEMO_ADMIN } from "@/lib/demo-api.js";
-import { clearAuth } from "@/lib/store.js";
+import { api, apiMode, ApiError } from "@/lib/api.js";
+import { DEMO_ADMIN, resetDemoData } from "@/lib/demo-api.js";
+import { clearAuth, setAuth } from "@/lib/store.js";
 import { toast, useAsync, useAuth } from "@/lib/hooks";
 import { cn, errorMessage, fieldErrors, formatDate, imgSrc, money } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { ConfirmButton } from "@/components/ui/confirm-button";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
 import { mountPage } from "@/components/site/shell";
 import { AuthForms } from "@/components/site/auth-forms";
@@ -51,6 +52,7 @@ function EntityForm({ fields, initial, onSubmit, onCancel, submitLabel }: { fiel
       toast("Image uploaded");
     } catch (err) {
       setErrors((e) => ({ ...e, [name]: errorMessage(err) }));
+      if (err instanceof ApiError && err.status === 403) toast(errorMessage(err), "error");
     } finally {
       setUploading("");
     }
@@ -74,6 +76,7 @@ function EntityForm({ fields, initial, onSubmit, onCancel, submitLabel }: { fiel
     } catch (err) {
       setErrors(fieldErrors(err));
       setFormError(errorMessage(err));
+      if (err instanceof ApiError && err.status === 403) toast(errorMessage(err), "error"); // e.g. read-only demo admin
     } finally {
       setBusy(false);
     }
@@ -257,12 +260,10 @@ function Crud<T extends Row>({
                   <Button variant="ghost" size="sm" onClick={() => setEditing({ key: keyOf(r), row: r })}>
                     Edit
                   </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
+                  <ConfirmButton
                     className="text-danger"
-                    onClick={async () => {
-                      if (!window.confirm(`Delete ${keyOf(r)}?`)) return;
+                    question={`Delete ${keyOf(r)}?`}
+                    onConfirm={async () => {
                       try {
                         await remove(keyOf(r));
                         toast("Deleted");
@@ -273,7 +274,7 @@ function Crud<T extends Row>({
                     }}
                   >
                     Delete
-                  </Button>
+                  </ConfirmButton>
                 </td>
               </tr>
             ))}
@@ -359,7 +360,7 @@ function Orders() {
               </p>
               <p className="text-sm">{o.items.map((i) => `${i.qty}× ${i.name}`).join(", ")}</p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <label htmlFor={`st-${o.reference}`} className="sr-only">
                 Status of {o.reference}
               </label>
@@ -370,16 +371,22 @@ function Orders() {
                   </option>
                 ))}
               </Select>
-              <Button
-                variant="ghost"
+              <ConfirmButton
+                size="md"
                 className="text-danger"
-                onClick={async () => {
-                  if (!window.confirm(`Delete order ${o.reference}?`)) return;
-                  await api(`/admin/orders/${o.reference}`, { method: "DELETE" }).then(reload, (err: Error) => toast(err.message, "error"));
+                question={`Delete order ${o.reference}?`}
+                onConfirm={async () => {
+                  try {
+                    await api(`/admin/orders/${o.reference}`, { method: "DELETE" });
+                    toast(`Order ${o.reference} deleted`);
+                    reload();
+                  } catch (err) {
+                    toast(errorMessage(err), "error");
+                  }
                 }}
               >
                 Delete
-              </Button>
+              </ConfirmButton>
             </div>
           </li>
         ))}
@@ -396,7 +403,7 @@ function Restaurants() {
       load={() => api("/restaurants")}
       keyOf={(r) => r.slug}
       columns={[
-        ["", (r) => <img src={imgSrc(r.image)} alt="" width={48} height={48} className="size-12 rounded-lg object-cover" />],
+        ["", (r) => <img src={imgSrc(r.image)} alt="" width={48} height={48} className="size-12 max-w-none rounded-lg object-cover" />],
         ["Name", (r) => <a href={`restaurant.html?slug=${r.slug}`} className="font-semibold underline-offset-4 hover:underline">{r.name}</a>],
         ["Cuisines", (r) => r.cuisines.map((c) => LABELS[c] || c).join(", ")],
         ["Rating", (r) => r.rating],
@@ -440,7 +447,7 @@ function Dishes() {
       load={() => api("/admin/dishes")}
       keyOf={(d) => d.slug}
       columns={[
-        ["", (d) => <img src={imgSrc(d.image)} alt="" width={48} height={48} className="size-12 rounded-lg object-cover" />],
+        ["", (d) => <img src={imgSrc(d.image)} alt="" width={48} height={48} className="size-12 max-w-none rounded-lg object-cover" />],
         ["Name", (d) => <span className="font-semibold">{d.name}</span>],
         ["Restaurant", (d) => d.restaurantName],
         ["Category", (d) => LABELS[d.cat] || d.cat],
@@ -554,6 +561,68 @@ function Messages() {
   );
 }
 
+/* ---------- public demo admin ---------- */
+// "admin" = real admin; "demo" = public read-only demo admin on the live API (writes answer 403).
+const isAdminRole = (role?: string) => role === "admin" || role === "demo";
+
+function DemoAdminButton() {
+  const [busy, setBusy] = useState(false);
+  const signIn = async () => {
+    setBusy(true);
+    try {
+      const res = await api("/auth/login", { method: "POST", body: DEMO_ADMIN });
+      setAuth({ token: res.token, user: res.user, mode: await apiMode() });
+      toast("Signed in as the demo admin");
+    } catch (err) {
+      toast(errorMessage(err), "error");
+    } finally {
+      setBusy(false);
+    }
+  };
+  return (
+    <div className="mx-auto mb-8 max-w-md rounded-2xl bg-card p-5 ring-1 ring-foreground/5">
+      <p className="font-semibold">Just looking around?</p>
+      <p className="mt-1 text-sm text-muted-foreground">Open the panel as a demo admin. No real data can be changed.</p>
+      <Button size="lg" className="mt-4 w-full" onClick={signIn} disabled={busy}>
+        {busy ? "Signing in..." : "Demo admin"}
+      </Button>
+    </div>
+  );
+}
+
+const RESET_FLAG = "fw-demo-reset";
+
+function DemoNote({ mode, role }: { mode: string; role: string }) {
+  if (mode === "live" && role !== "demo") return null;
+  return (
+    <div role="note" className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-[#fff6ec] p-4 text-sm ring-1 ring-primary/20">
+      <p>
+        <span className="mono mr-1 text-primary-strong">Demo mode.</span>
+        {mode === "live" ? " Read-only demo admin: every page opens, changes are not saved and customer details are hidden." : " Changes are not saved to a server: they stay in this browser until you reset."}
+      </p>
+      {mode === "demo" ? (
+        <ConfirmButton
+          variant="outline"
+          confirmLabel="Yes, reset"
+          question="Reset all demo data in this browser?"
+          onConfirm={() => {
+            resetDemoData();
+            clearAuth();
+            try {
+              sessionStorage.setItem(RESET_FLAG, "1");
+            } catch {
+              /* storage blocked: no toast after the reload */
+            }
+            window.location.reload();
+          }}
+        >
+          Reset demo data
+        </ConfirmButton>
+      ) : null}
+    </div>
+  );
+}
+
 const TABS = [
   ["overview", "Overview", Overview],
   ["orders", "Orders", Orders],
@@ -569,6 +638,14 @@ function AdminPage() {
   const [tab, setTab] = useState(() => (TABS.some(([k]) => `#${k}` === location.hash) ? location.hash.slice(1) : "overview"));
   useEffect(() => {
     apiMode().then(setMode);
+    try {
+      if (sessionStorage.getItem(RESET_FLAG)) {
+        sessionStorage.removeItem(RESET_FLAG);
+        toast("Demo data was reset");
+      }
+    } catch {
+      /* ignore */
+    }
   }, []);
   useEffect(() => {
     history.replaceState(null, "", `#${tab}`);
@@ -576,9 +653,10 @@ function AdminPage() {
 
   if (mode === null) return <Skeleton className="container-x my-10 h-80" />;
   const valid = auth && auth.mode === mode ? auth : null;
-  if (!valid || valid.user.role !== "admin")
+  if (!valid || !isAdminRole(valid.user.role))
     return (
       <div className="container-x py-10 md:py-16">
+        {!valid ? <DemoAdminButton /> : null}
         {valid ? (
           <p className="mx-auto mb-8 max-w-md rounded-xl bg-[#fdf0ee] p-4 text-danger">
             You are signed in as {valid.user.email}, which is not an admin account.{" "}
@@ -594,7 +672,9 @@ function AdminPage() {
               Demo mode: sign in with <strong>{DEMO_ADMIN.email}</strong> / <strong>{DEMO_ADMIN.password}</strong>. Changes are saved in this browser only.
             </>
           ) : (
-            <>Use the admin account set by ADMIN_EMAIL and ADMIN_PASSWORD on the API server.</>
+            <>
+              Public read-only demo: <strong>{DEMO_ADMIN.email}</strong> / <strong>{DEMO_ADMIN.password}</strong>. Real admins use the account set by ADMIN_EMAIL and ADMIN_PASSWORD on the API server.
+            </>
           )}
         </p>
       </div>
@@ -605,13 +685,14 @@ function AdminPage() {
     <div className="container-x py-10">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="mono text-primary-strong">Admin · {mode === "demo" ? "demo data" : "live API"}</p>
+          <p className="mono text-primary-strong">Admin · {mode === "demo" ? "demo data" : valid.user.role === "demo" ? "live API, read-only demo" : "live API"}</p>
           <h1 className="display mt-2 text-[clamp(2.4rem,6vw,4.4rem)]">Kitchen control.</h1>
         </div>
         <Button variant="outline" onClick={() => clearAuth()}>
           Sign out
         </Button>
       </div>
+      <DemoNote mode={mode} role={valid.user.role} />
       <div className="-mx-4 mt-6 mb-8 flex gap-2 overflow-x-auto px-4 pb-2" role="tablist" aria-label="Admin sections">
         {TABS.map(([k, label]) => (
           <button key={k} type="button" role="tab" aria-selected={tab === k} aria-controls="admin-panel" onClick={() => setTab(k)} className={cn("mono min-h-11 shrink-0 rounded-full border px-4 text-[0.75rem]", tab === k ? "border-foreground bg-foreground text-background" : "border-foreground/15 hover:border-foreground")}>

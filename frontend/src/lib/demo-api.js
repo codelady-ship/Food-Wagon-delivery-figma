@@ -11,6 +11,57 @@ const clone = (v) => (v === undefined ? v : JSON.parse(JSON.stringify(v)));
 const now = () => new Date();
 const id = () => Math.random().toString(16).slice(2, 10) + Date.now().toString(16);
 
+// Fictional rows so the admin sandbox has something to show (names, phones and emails are invented;
+// totals are priced by the same rules as real orders, so Overview adds up with the Orders tab).
+const SAMPLE_ORDERS = [
+  ["FW-5A0001", "delivery", "preparing", 0.2, [["veggie-pizza", 2], ["fresh-orange-juice", 2]], "Aylin Sample", "12 Sample Street, Baku", "WELCOME10", "Ring the bell twice, please."],
+  ["FW-5A0002", "pickup", "ready_for_pickup", 0.6, [["classic-cheeseburger", 1], ["crispy-fried-chicken", 1]], "Tural Example", "", "", ""],
+  ["FW-5A0003", "delivery", "on_the_way", 1.5, [["salmon-sushi-set", 1], ["rainbow-salad-bowl", 1]], "Nigar Placeholder", "5 Demo Avenue, Baku", "", ""],
+  ["FW-5A0004", "delivery", "delivered", 26, [["tonkotsu-ramen", 2], ["yuzu-lemonade", 2]], "Kamran Sample", "41 Example Lane, Baku", "FREESHIP", ""],
+  ["FW-5A0005", "delivery", "delivered", 50, [["margherita-pizza", 1], ["garlic-penne", 1], ["morning-juice", 2]], "Sabina Example", "9 Placeholder Road, Baku", "", "No onions."],
+  ["FW-5A0006", "pickup", "cancelled", 74, [["berry-pancakes", 2]], "Elvin Placeholder", "", "", ""],
+];
+const SAMPLE_MESSAGES = [
+  ["Aylin Sample", "aylin@example.com", "feedback", "The veggie pizza was still hot when it arrived. Thank you!", false, 3],
+  ["Tural Example", "tural@example.com", "partner", "We run a small bakery and would like to join Food Wagon. Who can we talk to?", false, 20],
+  ["Nigar Placeholder", "nigar@example.com", "order", "My order arrived without the juice. It was refunded quickly, thanks.", true, 49],
+];
+const SAMPLE_SUBSCRIBERS = [["aylin@example.com", 3], ["kamran@example.com", 30], ["sabina@example.com", 52], ["elvin@example.com", 80]];
+
+function addSamples(db) {
+  const ago = (hours) => new Date(Date.now() - hours * 3600 * 1000).toISOString();
+  const orders = SAMPLE_ORDERS.map(([reference, mode, status, hours, lines, name, address, promoCode, note], n) => {
+    const items = lines
+      .map(([slug, qty]) => [db.dishes.find((d) => d.slug === slug), qty])
+      .filter(([d]) => d)
+      .map(([d, qty]) => ({ dish: d.slug, name: d.name, restaurant: d.restaurant, restaurantName: d.restaurantName, price: d.price, qty }));
+    const promo = db.promos.find((p) => p.code === promoCode) || null;
+    const price = catalog.priceOrder({ lines: items, mode, restaurants: db.restaurants, promo });
+    return {
+      reference,
+      userId: null,
+      items,
+      mode,
+      customer: { name, phone: `+994 00 000 00 0${n + 1}`, email: `${name.split(" ")[0].toLowerCase()}@example.com`, address },
+      note,
+      promoCode: promo && !price.promoError ? promo.code : "",
+      payment: n % 2 ? "cash" : "card_demo",
+      subtotal: price.subtotal,
+      discount: price.discount,
+      deliveryFee: price.deliveryFee,
+      total: price.total,
+      status,
+      manualStatus: true,
+      sample: true,
+      createdAt: ago(hours),
+    };
+  }).filter((o) => o.items.length && !db.orders.some((x) => x.reference === o.reference));
+  db.orders.push(...orders);
+  db.messages.push(...SAMPLE_MESSAGES.map(([name, email, topic, message, handled, hours], n) => ({ id: `m-sample-${n}`, name, email, topic, message, handled, sample: true, createdAt: ago(hours) })));
+  db.subscribers.push(...SAMPLE_SUBSCRIBERS.filter(([email]) => !db.subscribers.some((s) => s.email === email)).map(([email, hours], n) => ({ id: `s-sample-${n}`, email, sample: true, createdAt: ago(hours) })));
+  db.sampled = true;
+}
+
 let memoryDb = null;
 function load() {
   if (memoryDb) return memoryDb;
@@ -33,6 +84,7 @@ function load() {
       messages: [],
     };
   }
+  if (!memoryDb.sampled) addSamples(memoryDb); // also tops up a sandbox saved before the samples existed
   return memoryDb;
 }
 function save() {

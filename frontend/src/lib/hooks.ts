@@ -3,7 +3,7 @@ import { getCart, getAuth } from "./store.js";
 import { apiMode } from "./api.js";
 
 type Cart = ReturnType<typeof getCart>;
-export type Auth = { token: string; mode: string; user: { id: string; name: string; email: string; role: "user" | "admin"; favourites: string[] } } | null;
+export type Auth = { token: string; mode: string; user: { id: string; name: string; email: string; role: "user" | "admin" | "demo"; favourites: string[] } } | null;
 
 export function useCart(): Cart {
   const [cart, setCart] = useState(getCart());

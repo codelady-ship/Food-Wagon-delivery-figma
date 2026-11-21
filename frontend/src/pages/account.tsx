@@ -28,7 +28,7 @@ function Dashboard({ auth }: { auth: NonNullable<Auth> }) {
           <p className="mt-2 text-muted-foreground">{auth.user.email}</p>
         </div>
         <div className="flex gap-3">
-          {auth.user.role === "admin" ? <LinkButton href="admin.html" variant="dark">Admin panel</LinkButton> : null}
+          {auth.user.role === "admin" || auth.user.role === "demo" ? <LinkButton href="admin.html" variant="dark">Admin panel</LinkButton> : null}
           <Button
             variant="outline"
             onClick={() => {

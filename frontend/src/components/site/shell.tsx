@@ -118,6 +118,7 @@ function Header({ current }: { current: string }) {
 
 function DemoBanner() {
   const mode = useApiMode();
+  const box = useRef<HTMLDivElement>(null);
   const [hidden, setHidden] = useState(() => {
     try {
       return sessionStorage.getItem("fw-demo-note") === "hidden";
@@ -125,7 +126,22 @@ function DemoBanner() {
       return false;
     }
   });
-  if (mode !== "demo" || hidden) return null;
+  const visible = mode === "demo" && !hidden;
+  // Toasts sit above this note where the two would overlap (see Toaster): its height is published as a CSS variable.
+  useEffect(() => {
+    const root = document.documentElement;
+    const el = box.current;
+    if (!visible || !el) return;
+    const publish = () => root.style.setProperty("--demo-note-h", `${Math.ceil(el.getBoundingClientRect().height) + 8}px`);
+    publish();
+    const ro = "ResizeObserver" in window ? new ResizeObserver(publish) : null;
+    ro?.observe(el);
+    return () => {
+      ro?.disconnect();
+      root.style.removeProperty("--demo-note-h");
+    };
+  }, [visible]);
+  if (!visible) return null;
   const close = () => {
     setHidden(true);
     try {
@@ -135,7 +151,7 @@ function DemoBanner() {
     }
   };
   return (
-    <div className="fixed right-4 bottom-4 z-[55] flex max-w-[min(360px,calc(100vw-32px))] items-start gap-3 rounded-xl bg-coffee px-4 py-3 text-[0.8rem] text-background/90 shadow-2xl" role="note">
+    <div ref={box} className="fixed right-4 bottom-4 z-[55] flex max-w-[min(360px,calc(100vw-32px))] items-start gap-3 rounded-xl bg-coffee px-4 py-3 text-[0.8rem] text-background/90 shadow-2xl" role="note">
       <p>
         <span className="mono mr-1 text-secondary">Demo mode.</span> The live API is offline or not configured, so the site runs on built-in sample data. Orders, accounts and reviews stay in this browser.
       </p>
@@ -275,7 +291,7 @@ function Toaster() {
     return () => window.removeEventListener("toast", on);
   }, []);
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-4 z-[60] flex flex-col items-center gap-2 px-4" role="status" aria-live="polite">
+    <div className="pointer-events-none fixed inset-x-0 bottom-[calc(1rem+var(--demo-note-h,0px))] z-[60] flex flex-col items-center gap-2 px-4 xl:bottom-4" role="status" aria-live="polite">
       {items.map((t) => (
         <p key={t.id} className={cn("pointer-events-auto max-w-md rounded-xl px-5 py-3 text-sm font-semibold shadow-xl", t.tone === "error" ? "bg-danger text-white" : "bg-foreground text-background")}>
           {t.message}
