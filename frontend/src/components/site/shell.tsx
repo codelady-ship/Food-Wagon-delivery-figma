@@ -141,6 +141,44 @@ function DemoBanner() {
       root.style.removeProperty("--demo-note-h");
     };
   }, [visible]);
+  // The note floats bottom-right; on laptop screens (1440 wide and below) it can land on the home hero's search
+  // card. While it would cover an element marked data-demo-note-avoid, it fades out, and it comes back as soon as
+  // that element scrolls away.
+  const [covering, setCovering] = useState(false);
+  useEffect(() => {
+    const el = box.current;
+    if (!visible || !el) return;
+    let raf = 0;
+    const check = () => {
+      raf = 0;
+      // queried each time: the page's islands (the hero among them) mount after this shell
+      const targets = Array.from(document.querySelectorAll<HTMLElement>("[data-demo-note-avoid]"));
+      const n = el.getBoundingClientRect();
+      const gap = 12;
+      setCovering(
+        targets.some((t) => {
+          const r = t.getBoundingClientRect();
+          return n.left < r.right + gap && n.right > r.left - gap && n.top < r.bottom + gap && n.bottom > r.top - gap;
+        })
+      );
+    };
+    const queue = () => {
+      if (!raf) raf = requestAnimationFrame(check);
+    };
+    check();
+    // the hero settles in with an entrance animation, so look again once it has
+    const timers = [300, 1200, 3000].map((ms) => window.setTimeout(queue, ms));
+    window.addEventListener("scroll", queue, { passive: true });
+    window.addEventListener("resize", queue);
+    window.addEventListener("load", queue);
+    return () => {
+      cancelAnimationFrame(raf);
+      timers.forEach(clearTimeout);
+      window.removeEventListener("load", queue);
+      window.removeEventListener("scroll", queue);
+      window.removeEventListener("resize", queue);
+    };
+  }, [visible]);
   if (!visible) return null;
   const close = () => {
     setHidden(true);
@@ -151,7 +189,15 @@ function DemoBanner() {
     }
   };
   return (
-    <div ref={box} className="fixed right-4 bottom-4 z-[55] flex max-w-[min(360px,calc(100vw-32px))] items-start gap-3 rounded-xl bg-coffee px-4 py-3 text-[0.8rem] text-background/90 shadow-2xl" role="note">
+    <div
+      ref={box}
+      className={cn(
+        "fixed right-4 bottom-4 z-[55] flex max-w-[min(360px,calc(100vw-32px))] items-start gap-3 rounded-xl bg-coffee px-4 py-3 text-[0.8rem] text-background/90 shadow-2xl transition-opacity duration-300 motion-reduce:transition-none",
+        covering && "pointer-events-none opacity-0"
+      )}
+      role="note"
+      inert={covering}
+    >
       <p>
         <span className="mono mr-1 text-secondary">Demo mode.</span> The live API is offline or not configured, so the site runs on built-in sample data. Orders, accounts and reviews stay in this browser.
       </p>
