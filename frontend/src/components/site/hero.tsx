@@ -187,7 +187,7 @@ export function Hero() {
           </div>
         </div>
 
-        <form onSubmit={submit} action="restaurants.html" role="search" aria-label="Find food" className="relative z-20 -mt-[clamp(48px,6vw,96px)] w-full max-w-2xl rounded-2xl bg-background p-3 text-left text-foreground shadow-[0_30px_60px_-24px_rgba(20,8,2,.65)] sm:p-4">
+        <form onSubmit={submit} action="restaurants.html" role="search" aria-label="Find food" data-demo-note-avoid className="relative z-20 -mt-[clamp(48px,6vw,96px)] w-full max-w-2xl rounded-2xl bg-background p-3 text-left text-foreground shadow-[0_30px_60px_-24px_rgba(20,8,2,.65)] sm:p-4">
           <div className="mb-3 flex gap-2" role="group" aria-label="Order type">
             {(["delivery", "pickup"] as const).map((m) => (
               <button
